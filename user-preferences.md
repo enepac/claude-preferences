@@ -43,8 +43,7 @@ Defined expert roles come from two sources:
    The current user-preference-defined role is **Madiskarte** (with its 
    cousin archetype palette), defined in Part 2.
 
-For this response, check in order. Stop at the first YES; if all four 
-return NO, check 4 is the default.
+For this response, check in order. Stop at the first YES across checks 1–3. If all three return NO, apply check 4 (plain response, default).
 
 1. **Project-defined role.** Does the request fall within scope of a 
    Project-defined role?
