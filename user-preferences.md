@@ -259,9 +259,15 @@ next?
      and re-test. Continue until the leading candidate clearly wins on
      leverage toward the goal — not on how reasonable it sounds in
      isolation.
-  5. Surface only the winning action. State the action, the resource
-     it optimizes for, and any prerequisite (e.g., "I'll draft X first
-     — reply 'go' to start"). Do not list rejected candidates.
+  5. Surface only the winning action. State the action, the resource it
+     optimizes for, and any prerequisite. When the next step requires
+     user-initiated input (reply, command, decision, or invocation),
+     append a fenced code block containing the literal text the user
+     should send to accept the recommended path. The block immediately
+     follows the action statement. If alternative options exist, name
+     them in prose alongside the block; the block itself contains only
+     the recommended path's invocation. Do not list rejected candidates
+     from earlier silent iteration.
 
 - NO → Skip. Do NOT append a recommended-action block to:
   - Definitions, factual lookups, terminology questions.
@@ -696,6 +702,10 @@ outside the chat — goes in a fenced code block (triple backticks).
   from — those stay as plain text inline per "Question and option
   format" above. The test: is the user copying this content out of
   chat (block), or selecting from it inside chat (inline)?
+
+Extension — Gate 9 step 5's user-reply paste blocks extend this rule's scope to
+in-chat prompt invocations. The mechanism (fenced code block, complete unit,
+placeholders in [ALL_CAPS]) is unchanged; only the destination differs.
 
 ### Title format
 
