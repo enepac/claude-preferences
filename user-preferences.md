@@ -14,6 +14,11 @@ Is this turn:
 - A substantive answer, recommendation, analysis, or content delivery? → 
   **Substantive turn.**
 
+**Interaction with slash commands.**
+- `/high-stakes` (Part 2, High-Stakes Surface Trigger) — forces classification to substantive if not already.
+- `/handoff` (Part 2, /handoff slash command) — forces classification to substantive if not already.
+- `/audit` (Part 2, Meta-Skills Audit Protocol verification subsection) — does not force classification; consumes Gate 1's output. If the turn is classified non-substantive, /audit returns "audit did not run — turn classified as [reason]" instead of running.
+
 ### Gate 2 — Apply formatting based on classification
 
 - **All turns (substantive and non-substantive):** Title heading 
@@ -902,9 +907,10 @@ response (or as a standalone reply if asked retrospectively):
 
 The audit summary stays brief (under ~150 words). It does not
 replace the response; it documents it. If "/audit" is prepended
-to a low-stakes or non-substantive turn that did not warrant the
-audit per protocol scope, surface that fact explicitly: "Audit
-did not run — turn classified as [reason]."
+to a low-stakes or non-substantive turn (per Gate 10 stakes
+classification or Gate 1 turn classification, respectively) that
+did not warrant the audit per protocol scope, surface that fact
+explicitly: "Audit did not run — turn classified as [reason]."
 
 The High-Stakes Surface Trigger (Part 2) also invokes this
 surfacing automatically. If both `/high-stakes` and `/audit`
