@@ -1985,13 +1985,13 @@ Demotion (User Preferences → Project Instructions):
 
 Promotion and demotion run through the Part 3 (3A) structural-fix protocol — propose, confirm with user, then apply. They are not automatic.
 
-### User Preferences editing workflow — Claude Code as canonical editor
+### Local artifact editing workflow — Claude Code as canonical editor
 
-The User Preferences document is maintained as a local file edited via Claude Code, not directly in Claude.ai Settings. This workflow exists because the Settings UI provides no version control, no diff visibility, no scripted audits, and no coordinated multi-section edits. The Settings field remains the deployment target — where preferences are loaded from at chat start per Lesson 3 — but is no longer where edits originate.
+Locally-maintained project artifacts — User Preferences, Project Knowledge files, and any other files the user maintains in a Claude Code working directory and deploys via paste or upload — are edited via Claude Code, not directly in-chat. This workflow exists because the deployment surfaces (Settings UI, project knowledge upload) provide no version control, no diff visibility, no scripted audits, and no coordinated multi-section edits. The deployment target (Settings field, project knowledge upload, etc.) remains where artifacts load from at chat start per Lesson 3, but is no longer where edits originate.
 
-**Canonical source.** The local file `user-preferences.md` (in a Claude Code working directory, git-tracked) is the authoritative version of the User Preferences document.
+**Canonical source.** The local files in the Claude Code working directory (e.g., `user-preferences.md`, `curriculum-state.md`, `audit-findings-pending.md`, etc.) are the authoritative versions.
 
-**Deployment target.** Claude.ai Settings → Profile → User Preferences. Updated by manual paste from the local canonical file when the user is ready to deploy changes.
+**Deployment target — varies by artifact.** User Preferences → claude.ai Settings → Profile → User Preferences (paste). Project Knowledge files → claude.ai project → Knowledge → upload/replace. Updated when the user is ready to deploy.
 
 **Edit flow when Claude is in Claude Code.**
 
@@ -2005,7 +2005,16 @@ The User Preferences document is maintained as a local file edited via Claude Co
 
 **Edit flow when Claude is NOT in Claude Code** (claude.ai chat, mobile, etc.).
 
-When a Claude instance is asked to draft preferences changes from a non-Claude-Code surface, output the patched section as a fenced code block for the user to paste into the local canonical file. Do NOT instruct the user to paste directly into Settings unless the user explicitly requests a same-chat hotfix. Drafted changes flow: chat output → local file → git commit → manual paste to Settings.
+When a Claude instance in chat is asked to make changes to local artifacts, do NOT instruct the user to find-and-replace manually in their editor. Format the change as a Claude Code handoff prompt — a single fenced code block the user pastes into Claude Code as one prompt. The handoff prompt must specify:
+
+- The full file path (e.g., `/mnt/c/Users/suberu/claude-preferences/user-preferences.md`).
+- The surgical edit (the exact block to replace and its replacement, the exact insertion point and content, or the exact deletion).
+- Any cross-reference touches needed in other files or sections (interaction notes per Part 3D step 5).
+- A suggested git commit message.
+
+Claude Code performs the file edit using its file-edit tools. The user's manual steps reduce to: (a) pasting the handoff prompt into Claude Code, (b) reviewing the diff, (c) deploying to the appropriate target.
+
+**Fallback — manual paste flow.** When the user explicitly indicates Claude Code is unavailable (mobile, no terminal access, time-sensitive hotfix), output the patched sections as fenced code blocks for the user to paste into the local file manually. Name the file path, the location of the edit (section/rule), and the commit message. This is the fallback; the Claude Code handoff is the default.
 
 **Sync handling.** If a quick edit is made directly in Settings UI bypassing the local file, the local file becomes stale. To re-sync: copy the Settings field contents back to the local file, commit with a note ("synced from Settings — out-of-band edit"). Resume normal flow. The local file remains canonical.
 
