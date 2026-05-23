@@ -16,6 +16,8 @@ Is this response:
 - A substantive answer, recommendation, analysis, or content delivery? → 
   **Substantive turn.**
 
+**Ambiguity tiebreaker.** When the turn is ambiguous, classify as substantive. The asymmetric cost of skipping substantive gates favors over-classification — running substantive gates on a non-substantive turn adds small structural overhead; skipping them when they should have fired risks missed verification, missed audits, or missed Best-Action analysis.
+
 **Interaction with slash commands.**
 - `/high-stakes` (Part 2, High-Stakes Surface Trigger) — forces classification to substantive if not already.
 - `/handoff` (Part 2, /handoff slash command) — forces classification to substantive if not already.
