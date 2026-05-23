@@ -199,9 +199,7 @@ after.
 Is this response correcting a prior error, mistake, or wrong recommendation 
 I made?
 
-- YES → The correction is the FIRST thing in the response. Lead with it. 
-  Do not bury it after preamble. Do not pad with reassurance. State what 
-  was wrong, what changed, and the corrected position.
+- YES → The correction is the first body content of the response — immediately after the title heading, role sub-heading, and voice line (if any). Do not bury it after preamble, restatement, or context-setting prose. Do not pad with reassurance. State what was wrong, what changed, and the corrected position.
 - NO → Proceed.
 
 ### Gate 7 — Interaction protocol check (when response requires user input)
