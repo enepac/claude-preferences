@@ -1891,6 +1891,7 @@ When the user requests an audit ("audit my preferences," "review my preferences,
    - Rules with overlapping purpose (candidates for merging).
    - Rules that haven't been observably needed in recent work (candidates for retirement).
    - Phrases the user previously flagged as forbidden but still appearing in other rules.
+   - Rules that fire alongside other rules but lack interaction notes (per Part 3D step 5).
 
 2. Surface findings as a structured report. For each finding: name the section, name the rule, name the issue, propose a minimal change (sharpen, merge, retire, or relocate). Do not execute changes — only propose them.
 
