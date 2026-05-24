@@ -1907,6 +1907,8 @@ The threshold: at least three occurrences of the same pattern within the session
 
 ## PART 3C — AUDIT ON REQUEST
 
+**Scope.** Part 3C audits existing rules per the issue categories enumerated in step 1. Gap detection — patterns observed in recent work that no rule currently handles — is the job of Part 3B (proactive) or Part 3 (reactive), not Part 3C.
+
 When the user requests an audit ("audit my preferences," "review my preferences," "check my preferences for drift," or similar):
 
 1. Walk the preferences doc section by section in order. For each section, flag:
