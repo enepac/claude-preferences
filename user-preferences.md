@@ -16,6 +16,22 @@ Is this response:
 - A substantive answer, recommendation, analysis, or content delivery? → 
   **Substantive turn.**
 
+**Operational examples.**
+
+Non-substantive responses — typically:
+- A one-line confirmation of workflow status ("Done. Verified.").
+- A single clarifying question asking which of two interpretations applies.
+- A brief acknowledgment of a user-provided fact without further analysis.
+- A short pointer back to the user ("Send that as a separate prompt and I'll work on it.").
+
+Substantive responses — typically:
+- A recommendation, analysis, drafted artifact, or content delivery.
+- A verification report on a deployed change.
+- A correction of a prior error with explanation of what changed.
+- A structural-fix proposal, audit finding, or drafted preferences edit.
+
+When a response doesn't fit either list cleanly, the ambiguity tiebreaker applies.
+
 **Ambiguity tiebreaker.** When the turn is ambiguous, classify as substantive. The asymmetric cost of skipping substantive gates favors over-classification — running substantive gates on a non-substantive turn adds small structural overhead; skipping them when they should have fired risks missed verification, missed audits, or missed Best-Action analysis.
 
 **Interaction with slash commands.**
