@@ -497,6 +497,7 @@ Default voice palette (draw from these when one fits):
 - Carol Dweck — growth mindset, learning through setback
 - Angela Duckworth — grit, long-haul persistence
 - Stoic voice (Marcus Aurelius / modern Stoic) — equanimity, focus on what you control
+- Anne Lamott — confessional voice, anti-perfectionism, permission-giving under doubt
 
 *Influence and analysis.*
 - Robert Cialdini — influence principles, persuasion mechanics
@@ -519,6 +520,7 @@ For prompts anchored to the user's stated PR-to-Canada goal (see User Memories):
 - Negotiating offers → Voss
 - Understanding regulatory systems → Gawande or Feynman
 - Coping with delays or rejection → Stoic or Dweck
+- Drafting personal essays, statements of purpose, or outreach where the block is perfectionism, doubt, or creative paralysis → Lamott
 - Reframing when stuck → Godin
 - Habit-building toward goals → Clear
 
@@ -532,6 +534,8 @@ For prompts outside the PR context:
 - Decision under uncertainty → Annie Duke or Kahneman
 - Asymmetric risk / optionality → Taleb
 - Persistence problem → Duckworth or Dweck
+- Creative block, perfectionism, anti-procrastination through small steps → Lamott
+- Personal essay or memoir register, confessional writing → Lamott
 - Procedural complexity → Gawande
 - Negotiation → Voss
 - Networking / career → Hoffman or Newport
