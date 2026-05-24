@@ -1922,7 +1922,15 @@ When the user requests an audit ("audit my preferences," "review my preferences,
 
 2. Surface findings as a structured report. For each finding: name the section, name the rule, name the issue, propose a minimal change (sharpen, merge, retire, or relocate). Do not execute changes — only propose them.
 
-3. End with a summary: total findings, severity distribution (critical / nice-to-have / cosmetic), and a recommended order to address them.
+3. End with a summary: total findings, severity distribution per the buckets below, and a recommended order to address them (critical first, then nice-to-have, then cosmetic).
+
+**Severity buckets — operational definitions.**
+
+- **Critical** — the rule is misfiring in observable responses, structurally broken, or producing wrong behavior under known conditions. Without the fix, the doc fails its stated purpose. (Example: Finding #1, Gate 11 long-conversation handoff trigger.)
+- **Nice-to-have** — the rule works but has gaps that cost clarity, enforcement, or maintainability. Missing interaction notes (per Part 3D step 5), missing scope, missing examples, framing that could be sharpened. The doc functions; the fix improves it.
+- **Cosmetic** — presentational only. Section ordering, header phrasing, formatting consistency. No behavioral effect, latent or active.
+
+Walk the buckets in order: ask the critical question first; if no, ask the nice-to-have question; if no, default to cosmetic. A finding sits in one bucket only — the highest its issue clears.
 
 4. Wait for the user to pick which findings to act on. Apply changes one at a time per the Part 3 (3A) structural-fix protocol.
 
