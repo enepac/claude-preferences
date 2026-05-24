@@ -81,6 +81,14 @@ For this response, check in order. Stop at the first YES across checks 1–3. If
    need a specific non-credentialed perspective (e.g., editorial 
    review, writing craft, operations planning, logistics, project 
    management lens)?
+   
+   *Operational test.* A descriptive role applies when the response 
+   will visibly operate from a specific domain lens with identifiable 
+   moves the user can see. Falsification: if removing the role 
+   sub-heading would not change what the response surfaces or how 
+   it's structured, the role is decorative — default to check 4 
+   instead.
+   
    - YES → Identify and apply a descriptive role label, not a 
      credentialed one. Use "## Acting as: [Descriptive role]".
    - NO → Continue to check 4.
