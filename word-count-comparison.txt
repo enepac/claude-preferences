@@ -1,0 +1,96 @@
+WORD COUNT COMPARISON — Audit-and-Prune Pass 2026-05-25
+=======================================================
+
+SUMMARY
+-------
+Original (user-preferences.md):   18,629 words
+Pruned (user-preferences-pruned.md): 15,887 words
+Reduction:                          2,742 words  (14.7%)
+
+
+HIGH-LEVEL SECTION BREAKDOWN
+-----------------------------
+
+Section                                    Orig   Pruned   Delta      %
+---------------------------------------- ------   ------  ------  -----
+Part 1 — Gates 1–10                       3,514    3,444     -70    -2%
+Part 2 — Behavior rules (total)          11,739    9,996  -1,743   -15%
+Part 3 — Reactive drift correction          161      161      +0    +0%
+Part 3B — Proactive drift detection         241      229     -12    -5%
+Part 3C — Audit on request                  630      591     -39    -6%
+Part 3D — Audit before you add              362      322     -40   -11%
+Part 3E — Tiebreaker                        152      153      +1    +1%
+Part 3F — Continuous audit [RETIRED]        677        0    -677  -100%
+Part 4 — Multi-project / workflow         1,149      987    -162   -14%
+---------------------------------------- ------   ------  ------  -----
+TOTAL                                    18,629   15,887  -2,742  -14.7%
+
+
+PART 2 SUBSECTION BREAKDOWN
+----------------------------
+
+Subsection                               Orig   Pruned   Delta      %   Note
+-------------------------------------- ------   ------  ------  -----  -----
+Honesty about uncertainty                 330      330      +0    +0%
+Failure mode disclosure                    43        0     -43  -100%  MERGED → Gate 4 Part C
+Professional representation default       100       89     -11   -11%  SHARPENED
+Tone                                      140      140      +0    +0%
+Punctuation conventions                   252      252      +0    +0%  (new this session)
+Writing voice — adaptive selection      1,133    1,133      +0    +0%
+Question and option format                142      142      +0    +0%
+Prompt correction — always-on             595      492    -103   -17%  SHARPENED
+Copy-paste content format                 266      266      +0    +0%
+Title format                              242      242      +0    +0%
+Meta-Skills Audit Protocol              1,722    1,485    -237   -14%  SHARPENED
+Best-Action Protocol                      624      559     -65   -10%  SHARPENED
+Position-Hold and Goal-Advancement      1,082      992     -90    -8%  SHARPENED
+Response Discipline                     1,071      991     -80    -7%  SHARPENED
+High-Stakes Response Iteration Protocol   552      455     -97   -18%  SHARPENED
+High-Stakes Surface Trigger               717      630     -87   -12%  SHARPENED
+Interview Mode Protocol                   585      476    -109   -19%  SHARPENED
+/handoff slash command                    327      432    +105   +32%  MERGED ← Long-conv handoff
+Long-conversation handoff procedure       299        0    -299  -100%  MERGED → /handoff
+Drive staging vs. project knowledge       627        0    -627  -100%  RETIRED
+Madiskarte voice and cousin archetypes    836      836      +0    +0%  (voice palette; not audited)
+-------------------------------------- ------   ------  ------  -----
+Part 2 total                           11,739    9,996  -1,743  -15%
+
+
+WHAT DROVE THE REDUCTION
+-------------------------
+
+By category:
+  RETIRED sections (Drive staging, Part 3F)       -1,304 words  (48% of reduction)
+  MERGED sections (Failure mode disclosure,
+    Long-conv handoff → /handoff)                   -241 words   (9% of reduction)
+  SHARPENED sections (12 sections)               -1,197 words  (44% of reduction)
+
+Largest individual savings:
+  Drive staging retired                             -627 words
+  Part 3F retired                                   -677 words
+  Long-conv handoff merged into /handoff            -299 words (net: /handoff grew +105)
+  Meta-Skills Audit compressed                      -237 words
+  HSST interaction notes reduced                     -87 words
+  Interview Mode failure-mode/interaction removed   -109 words
+
+What was preserved at zero reduction:
+  Voice palette (Madiskarte + cousins): 836 words — per audit constraint, not audited
+  Punctuation conventions: 252 words — new this session, not subject to firing-evidence audit
+  Writing voice: 1,133 words — no excess found; kept verbatim
+  Copy-paste content format: 266 words — kept verbatim
+  Title format: 242 words — kept verbatim
+  Part 3 reactive drift: 161 words — minimal, no fat to cut
+  Part 3E tiebreaker: 152 words — minimal, kept verbatim
+
+
+NOTES
+-----
+- user-preferences.md has NOT been modified. This comparison is between
+  the original and the candidate pruned file only.
+- All reciprocal interaction notes per Part 3D step 5 have been updated
+  in user-preferences-pruned.md to remove references to retired sections.
+- The just-deployed Gate 9 step 5 and Specific-action rule patches are
+  fully preserved in user-preferences-pruned.md.
+- Part 1 reduction (-70 words) comes from Gate 3 Role-thinking discipline
+  compression and Gate 10 final paragraph removal; Gate 4 Part C gained
+  ~43 words absorbing Failure mode disclosure.
