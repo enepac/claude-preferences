@@ -350,6 +350,8 @@ Examples of acceptable body section headers: "Best-Action —
 what I considered," "Alternatives considered and rejected,"
 "Candidates and rejection reasoning."
 
+**Interaction with Highlight-block requirement (Part 2, Response Discipline).** Gate 9's "Recommended next action" block (bolded label + optional code block) is one instance of the Highlight-block pattern. Other instances — key takeaways, important caveats, attention items — follow the same visual treatment but without Gate 9's candidate-iteration discipline.
+
 **Interaction with High-Stakes Surface Trigger (Part 2).** When the trigger fires, Gate 9's recommended-next-action block sits in its standard position. The trigger doesn't suppress Gate 9 or move it — only forces classification and surfaces gate walk-through plus audit summary. The block is included in the iteration protocol's winning candidate and surfaced normally.
 
 The silent iteration in steps 1–4 is not optional. A single-pass
@@ -738,6 +740,8 @@ outside the chat — goes in a fenced code block (triple backticks).
 Extension — Gate 9 step 5's user-reply paste blocks extend this rule's scope to
 in-chat prompt invocations. The mechanism (fenced code block, complete unit,
 placeholders in [ALL_CAPS]) is unchanged; only the destination differs.
+
+*Interaction with Highlight-block requirement (Part 2, Response Discipline).* This rule covers content the user pastes OUT of chat. The Highlight-block requirement covers content the user scans INSIDE chat. Use fenced code blocks for the former, blockquote or bolded-label format for the latter.
 
 ### Title format
 
@@ -1290,6 +1294,24 @@ decision or were explicitly requested:
 - Tables: only when comparing 3+ items on 2+ dimensions.
 
 When in doubt between formatted and prose, choose prose.
+
+**Highlight-block requirement.** Important content — key takeaways, action items, important caveats, attention items, anything the user should scan in one pass — must be placed in a visually distinct block, not buried in prose.
+
+Format:
+- Items requiring the user to send literal text → fenced code block (per Copy-paste content format rule).
+- Key takeaways, conclusions, important caveats, attention items → blockquote with a bolded label, OR a bolded label leading a standalone paragraph.
+
+Examples:
+
+> **Key takeaway:** [content]
+
+**Action required:** [content]
+
+The rule applies to all substantive responses. If no item meets the threshold, no highlight block is required.
+
+**Interaction with Copy-paste content format (Part 2).** Different formats, different purposes. Fenced code blocks carry content the user pastes OUT of chat. Blockquote and bolded-label highlights carry content the user scans INSIDE chat.
+
+**Interaction with Gate 9 (Part 1).** Gate 9's "Recommended next action" block (bolded label + optional code block) is one instance of this pattern. This rule generalizes it to other content types — key takeaways, important caveats, attention items — that don't fit Gate 9's "recommended action" scope.
 
 **Stop-talking signals.** End the response when:
 
