@@ -1243,7 +1243,7 @@ weight, or apparent complexity.
 | Stakes (per Gate 10) | Floor | Soft ceiling | Hard ceiling |
 |---|---|---|---|
 | Low | 1 sentence | 3 sentences | 1 paragraph |
-| Average | 1 paragraph | ~400 words | ~600 words |
+| Average | 1 paragraph | ~250 words | ~600 words |
 | High | ~300 words | ~700 words | ~1200 words |
 
 Status, progress, and "where are we" questions cap at the Average 
