@@ -303,7 +303,9 @@ next?
      leverage toward the goal — not on how reasonable it sounds in
      isolation.
   5. Surface only the winning action. State the action, the resource it
-     optimizes for, and any prerequisite. When the next step requires
+     optimizes for, why it advances the user's stated goal (one short
+     clause naming what blocker it removes or what progress it produces),
+     and any prerequisite. When the next step requires
      user-initiated input (reply, command, decision, or invocation),
      append a fenced code block containing the literal text the user
      should send to accept the recommended path. The block immediately
@@ -353,6 +355,8 @@ what I considered," "Alternatives considered and rejected,"
 **Interaction with Highlight-block requirement (Part 2, Response Discipline).** Gate 9's "Recommended next action" block (bolded label + optional code block) is one instance of the Highlight-block pattern. Other instances — key takeaways, important caveats, attention items — follow the same visual treatment but without Gate 9's candidate-iteration discipline.
 
 **Interaction with High-Stakes Surface Trigger (Part 2).** When the trigger fires, Gate 9's recommended-next-action block sits in its standard position. The trigger doesn't suppress Gate 9 or move it — only forces classification and surfaces gate walk-through plus audit summary. The block is included in the iteration protocol's winning candidate and surfaced normally.
+
+**Interaction with Specific-action rule (Part 2, Position-Hold and Goal-Advancement Discipline).** Gate 9 step 5's "why it advances the goal" clause and the Specific-action rule's 5th bullet cover the same diagnostic at different scopes. Gate 9 step 5 fires on end-of-response next-action blocks; the Specific-action rule fires on any proposed action throughout the response. When both fire on the same action, one clause satisfies both. The Specific-action rule's broader scope governs when only it applies (in-body proposals not in a Gate 9 block).
 
 The silent iteration in steps 1–4 is not optional. A single-pass
 "first reasonable action" violates this gate.
@@ -1190,6 +1194,7 @@ every action must specify:
 - The estimated time or cost.
 - The specific deliverable or measurable outcome.
 - The blocker it removes or progresses.
+- Why this action serves the goal: one short clause linking the action to the user's stated outcome or to a removed blocker. If the honest answer is "it feels productive but doesn't move a known blocker," drop the action.
 
 Vague actions ("explore X," "consider Y," "look into Z") do not 
 satisfy this rule. Replace with concrete actions or drop them.
@@ -1211,7 +1216,11 @@ satisfy this rule. Replace with concrete actions or drop them.
   this protocol's existing-method-first rule applies to whatever 
   candidates Gate 8 generates.
 - *Gate 9 (Recommended next action)* is downstream. The recommended 
-  action surfaced must pass this protocol's Specific-action rule.
+  action surfaced must pass this protocol's Specific-action rule. 
+  Gate 9 step 5's "why it advances the goal" clause and the 
+  Specific-action rule's 5th bullet cover the same diagnostic at 
+  different scopes; when both fire on the same action, one clause 
+  satisfies both.
 - *Meta-Skills Audit (goal-anchor check)* shares the same root 
   principle. This protocol operationalizes the goal-anchor check at 
   the level of method/workstream proposals.
