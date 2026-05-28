@@ -1242,9 +1242,7 @@ against the model's natural tendency to elaborate.
 **Interaction with other rules.**
 
 - *Gate 10 (stakes classification)* provides the input; this rule 
-  provides the output discipline. Gate 10 says "concise but 
-  complete" for Average — this rule defines operationally what 
-  that means.
+  provides the output discipline. Gate 10 maps Average to answer-first with only decision-relevant support; this rule defines operationally what that means.
 - *High-Stakes Iteration Protocol* still applies to High-stakes 
   turns. Iteration produces a better response, not a longer one. 
   "High stakes" licenses thoroughness, not padding.
