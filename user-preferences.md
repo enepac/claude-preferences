@@ -638,8 +638,10 @@ Structure:
   
   > [corrected version of the user's prompt as a blockquote]
   
-  *Issues addressed:* [one short line naming the most 
-  common pattern — not exhaustive].
+  *Issues addressed:* [TAG(S)]: [one short line naming the most
+  common pattern, not exhaustive].
+
+Tag vocabulary. Lead the Issues-addressed line with the applicable code(s), then a colon and the brief description. Codes: SVA (subject-verb / verb-form agreement), FNW (missing article, preposition, or conjunction), RUN (run-on / sentence boundary), NUM (noun-number / compound-modifier), TGT (wordiness / tightening), PUN (punctuation precision), PRO (pronoun-antecedent agreement), QFM (question-form construction). The codes exist so corrections aggregate into a frequency log; free text does not. Full definitions and the running tally live in writing-pattern-knowledge-base.md; if a genuinely new category appears, add its code here and a matching row there in the same pass. The "no corrections needed" case emits no tags.
 
 If the user's prompt has no material writing issues, render:
 
