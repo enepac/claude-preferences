@@ -8,7 +8,7 @@
 2. How Claude receives instructions per turn
 3. The instruction lifecycle (REVISED): User Preferences and project knowledge refresh on each new user message, not only at chat start. An active chat reflects a saved change on its next message. Behavior confirmed by sentinel tests; mechanism most likely per-message reinjection but not definitively resolved. Corrected model documented in lesson-3-anomaly.md.
 4. User Preferences in depth
-5. Project Instructions in depth
+5. Project Instructions in depth (REVISED): testing guidance corrected to same-chat iteration per Lesson 3 (revised) and Lesson 14; demotion criteria added (when a User Preferences rule moves down to Project Instructions). Scope, roles, and routing content unchanged.
 6. Style overrides
 7. Memory and Past Chats
 8. Writing instructions Claude can follow
@@ -35,7 +35,7 @@
 
 ## Session activity log
 
-[Current session]: Lesson 3 (instruction lifecycle) rewritten with the corrected mid-chat-refresh model; curriculum-state index line updated to REVISED. Resolves the dangling "corrected Lesson 3" references in the deployed User Preferences (Part 4, /handoff).
+[Current session]: Lesson 3 (instruction lifecycle) rewritten with the corrected mid-chat-refresh model; curriculum-state index line updated to REVISED, resolving the dangling "corrected Lesson 3" references in the deployed User Preferences. Stale lifecycle claims in Part 4 and /handoff corrected to match. Lesson 3 anomaly workstream closed (drift signal resolved in lesson-3-anomaly.md). Lesson 5 (Project Instructions in depth) revised and delivered: same-chat iteration plus demotion criteria. Lifecycle-correction cascade from the Lesson 14 downstream audit now complete (Lessons 3, 4, 5, 14 all corrected).
 
 [Prior session]: Audit-findings integration + Finding #1 redesign + Claude Code workflow setup.
 
