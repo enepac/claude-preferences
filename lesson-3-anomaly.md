@@ -27,9 +27,9 @@ This has now been contradicted 13 times across sessions:
 
 The Cluster 1 batch observation is particularly strong — five edits across five distinct rule locations propagated together via single Settings save.
 
-## Drift signal status
+## Drift signal status — RESOLVED
 
-Drift signal has fired multiple times across sessions. Evidence base is overwhelming. Curriculum revision is overdue.
+Drift signal fired across many sessions; the evidence base was overwhelming. Curriculum revision is now complete: Lesson 3 was rewritten with the corrected mid-chat-refresh model and marked REVISED in curriculum-state.md, and the deployed User Preferences (Part 4, /handoff) were corrected to match. Drift signal closed. The log stays open for genuinely new lifecycle observations, but the curriculum no longer depends on the falsified load-once model.
 
 ## Mechanism evidence — Opus 4.8 release (2026-05-28)
 
@@ -62,9 +62,9 @@ Re-weighting after the 2026-05-28 evidence:
 
 Net: the 2026-05-28 evidence shifts no explanation decisively. It confirms the behavior is mechanically supported and removes "is this even possible" as a concern. It does not resolve which mechanism produced the logged observations. Explanation 1 remains the simplest fit.
 
-## Next steps when picked up
+## Next steps — status
 
-1. Test the lifecycle explicitly in a fresh chat: load preferences, make a known change, save in Settings, send a new message, ask Claude to report on the changed rule.
-2. Distinguish between User Preferences refreshes vs. project knowledge refreshes.
-3. Revise Lesson 3 with the corrected model.
-4. Audit downstream lessons for any dependencies on the old model.
+1. DONE. Lifecycle tested via controlled sentinel-string experiments; a saved change became visible on the next user message in an active chat.
+2. DONE. User Preferences refreshes and project knowledge refreshes both confirmed mid-chat.
+3. DONE. Lesson 3 rewritten with the corrected model (curriculum-state.md, marked REVISED).
+4. IN PROGRESS. Downstream-lesson audit: Lessons 14 and 4 updated; Lesson 5 revision is the remaining queued item.
