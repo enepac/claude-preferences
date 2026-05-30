@@ -6,7 +6,7 @@
 
 1. The instruction layer model
 2. How Claude receives instructions per turn
-3. The instruction lifecycle — NEEDS REVISION: see lesson-3-anomaly.md
+3. The instruction lifecycle (REVISED): User Preferences and project knowledge refresh on each new user message, not only at chat start. An active chat reflects a saved change on its next message. Behavior confirmed by sentinel tests; mechanism most likely per-message reinjection but not definitively resolved. Corrected model documented in lesson-3-anomaly.md.
 4. User Preferences in depth
 5. Project Instructions in depth
 6. Style overrides
@@ -34,6 +34,8 @@
 - Lesson 13 conflict resolution → integrated
 
 ## Session activity log
+
+[Current session]: Lesson 3 (instruction lifecycle) rewritten with the corrected mid-chat-refresh model; curriculum-state index line updated to REVISED. Resolves the dangling "corrected Lesson 3" references in the deployed User Preferences (Part 4, /handoff).
 
 [Prior session]: Audit-findings integration + Finding #1 redesign + Claude Code workflow setup.
 
