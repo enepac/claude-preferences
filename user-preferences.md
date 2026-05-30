@@ -1488,7 +1488,7 @@ When the user's prompt opens with `/handoff`, produce a structured state summary
 
 2. Recommend moving the source conversation into the project itself. The curated knowledge files capture decisions and artifacts; the source conversation preserves the uncurated record — false starts, alternatives considered and rejected, the reasoning that didn't make the final cut. Both belong in the project. Procedure: from the chats list, click the conversation's more-options control and select "Add to Project."
 
-3. Recommend starting a fresh chat in the project after the handoff. The lifecycle rule (per Lesson 3) means the new chat will load the updated Project Instructions and Project Knowledge.
+3. Recommend starting a fresh chat in the project after the handoff, to avoid context saturation and start from a clean slate. Not because an active chat would miss the updates: the corrected lifecycle model (lesson-3-anomaly.md) has active chats refreshing on their next user message. Per the revised Lesson 14, same-chat iteration is the default; fresh-chat is reserved for saturation or controlled isolation, which a post-handoff reset is.
 
 **Scope.** The trigger applies only to the turn it appears on. Subsequent turns return to normal classification unless re-triggered.
 
@@ -1806,7 +1806,7 @@ Both run through the Part 3 (3A) structural-fix protocol. The mechanics of editi
 
 ### Local artifact editing workflow — Claude Code as canonical editor
 
-Locally-maintained project artifacts — User Preferences, Project Knowledge files, and any other files the user maintains in a Claude Code working directory and deploys via paste or upload — are edited via Claude Code, not directly in-chat. This workflow exists because the deployment surfaces (Settings UI, project knowledge upload) provide no version control, no diff visibility, no scripted audits, and no coordinated multi-section edits. The deployment target (Settings field, project knowledge upload, etc.) remains where artifacts load from at chat start per Lesson 3, but is no longer where edits originate.
+Locally-maintained project artifacts — User Preferences, Project Knowledge files, and any other files the user maintains in a Claude Code working directory and deploys via paste or upload — are edited via Claude Code, not directly in-chat. This workflow exists because the deployment surfaces (Settings UI, project knowledge upload) provide no version control, no diff visibility, no scripted audits, and no coordinated multi-section edits. The deployment target (Settings field, project knowledge upload, etc.) remains where artifacts load from, but is no longer where edits originate. Per the corrected lifecycle (lesson-3-anomaly.md), an active chat reflects a saved change on its next user message, not only at chat start.
 
 **Canonical source.** The local files in the Claude Code working directory (e.g., `user-preferences.md`, `curriculum-state.md`, `audit-findings-pending.md`, etc.) are the authoritative versions.
 
@@ -1820,7 +1820,7 @@ Locally-maintained project artifacts — User Preferences, Project Knowledge fil
 4. Git commit captures the change with a descriptive message.
 5. User reviews the diff.
 6. When ready to deploy: user copies the full file contents and pastes into Settings → Profile → User Preferences, then saves.
-7. New chats opened after the save load the updated preferences. Active chats are unaffected per Lesson 3.
+7. Chats reflect the updated preferences on their next user message after the save: active chats refresh mid-chat, not only at chat start (corrected lifecycle model, lesson-3-anomaly.md). A fresh chat is still the cleanest way to confirm a deploy and avoid context saturation, but is no longer required for the change to take effect.
 
 **Edit flow when Claude is NOT in Claude Code** (claude.ai chat, mobile, etc.).
 
@@ -1843,7 +1843,7 @@ Claude Code performs the file edit using its file-edit tools. The user's manual 
 
 **Interaction with other rules.**
 
-- *Lesson 3 (instruction lifecycle)*: This workflow respects the lifecycle. Edits only become active in new chats opened after the Settings paste.
+- *Lesson 3 (instruction lifecycle)*: This workflow respects the corrected lifecycle. A saved edit becomes active in any chat (new or already open) on its next user message after the Settings paste. The earlier "new chats only" model is falsified per lesson-3-anomaly.md.
 - *Part 3C (Audit on request)*: Auditable via Claude Code reading the local file directly. Can be scripted and re-run.
 - *Part 3D (Audit Before You Add)*: Runs in Claude Code before the edit lands in the local file, not after the paste.
 - *Promotion and demotion between layers (this Part)*: Promotion/demotion is the WHAT (which rules belong where). This rule is the HOW (operational mechanics of making the edit).
