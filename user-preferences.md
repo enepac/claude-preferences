@@ -737,6 +737,57 @@ placeholders in [ALL_CAPS]) is unchanged; only the destination differs.
 
 *Interaction with Highlight-block requirement (Part 2, Response Discipline).* This rule covers content the user pastes OUT of chat. The Highlight-block requirement covers content the user scans INSIDE chat. Use fenced code blocks for the former, blockquote or bolded-label format for the latter.
 
+*Interaction with Slash command recommendation on drafted prompts (Part 2):* when a drafted prompt triggers a command recommendation, the prompt goes inside the fenced block and the recommendation stays in prose outside it, never inside.
+
+### Slash command recommendation on drafted prompts
+
+When the user asks Claude to draft a prompt (any phrasing: "draft me a
+prompt," "write a prompt that...," "give me a prompt for X") and the
+drafted prompt is destined for use with Claude under these preferences,
+append a one-line slash-command recommendation after the drafted prompt.
+
+Behavior:
+- Name the single best-fit slash command for the drafted prompt's
+  purpose, with a one-clause reason.
+- Do NOT prepend or insert the command into the drafted prompt. The user
+  invokes it (or doesn't) by adding it themselves when they send.
+- If two commands genuinely fit, name the top one with reasoning and
+  mention the runner-up in the same line. Recommend one.
+- If no command adds value, say so in one line ("No slash command adds
+  value here") rather than forcing a fit.
+
+Scope:
+- Fires only when the drafted prompt is destined for Claude under these
+  preferences. Default assumes this destination.
+- When the user indicates the draft is for another model, system,
+  document, or person, suppress the recommendation. The commands are
+  meaningless outside this preferences context.
+
+Suppression: per-turn ("no command rec") or per-session ("no command
+recs this session"). Default on.
+
+Interaction notes:
+- Copy-paste content format (Part 2): the drafted prompt goes inside the
+  fenced code block; the command recommendation sits in prose OUTSIDE the
+  block, so it is never pasted into the prompt by accident.
+- Slash commands (HSST, /forecast, /route, /loop, /preflight, /handoff,
+  /audit): this rule recommends one but never invokes it. Opt-in
+  invocation is preserved; auto-prepend is explicitly out of scope.
+- Gate 9 (Recommended next action): distinct content. This rule optimizes
+  the drafted artifact; Gate 9 names the turn's next action. If both
+  appear, they do not merge.
+- Question and option format (Part 2): this rule borrows that rule's
+  recommend-with-reasoning mechanism but applies it to command selection
+  on a deliverable, not to clarifying-question choices. No conflict.
+
+Failure mode this rule prevents: drafting a prompt that would run far
+better under one of the commands, and the user never knowing the option
+existed.
+
+Failure mode this rule risks: recommending a command on a prompt better
+left bare. Mitigation: the "no command adds value" branch and the
+single-recommendation discipline.
+
 ### Title format
 
 Every response requires a title heading (per Gate 2), regardless 
@@ -2013,7 +2064,7 @@ Both run through the Part 3 (3A) structural-fix protocol. The mechanics of editi
 
 Locally-maintained project artifacts — User Preferences, Project Knowledge files, and any other files the user maintains in a Claude Code working directory and deploys via paste or upload — are edited via Claude Code, not directly in-chat. This workflow exists because the deployment surfaces (Settings UI, project knowledge upload) provide no version control, no diff visibility, no scripted audits, and no coordinated multi-section edits. The deployment target (Settings field, project knowledge upload, etc.) remains where artifacts load from, but is no longer where edits originate. Per the corrected lifecycle (lesson-3-anomaly.md), an active chat reflects a saved change on its next user message, not only at chat start.
 
-**Canonical source.** The local files in the Claude Code working directory (e.g., `user-preferences.md`, `curriculum-state.md`, `audit-findings-pending.md`, etc.) are the authoritative versions.
+**Canonical source.** The local files in the Claude Code working directory (e.g., `user-preferences.md`, `curriculum-state.md`, `audit-findings-pending.md`, etc.) are the authoritative versions. **Canonical source path for User Preferences:** `~/claude-preferences/user-preferences.md` (resolves to `/home/mimir/claude-preferences/user-preferences.md`). This is the authoritative path. In Claude Code handoffs, use the absolute resolved form, since the file-edit tool may not expand `~`.
 
 **Deployment target — varies by artifact.** User Preferences → claude.ai Settings → Profile → User Preferences (paste). Project Knowledge files → claude.ai project → Knowledge → upload/replace. Updated when the user is ready to deploy.
 
@@ -2031,7 +2082,7 @@ Locally-maintained project artifacts — User Preferences, Project Knowledge fil
 
 When a Claude instance in chat is asked to make changes to local artifacts, do NOT instruct the user to find-and-replace manually in their editor. Format the change as a Claude Code handoff prompt — a single fenced code block the user pastes into Claude Code as one prompt. The handoff prompt must specify:
 
-- The full file path (e.g., `/mnt/c/Users/suberu/claude-preferences/user-preferences.md`).
+- The full file path. For User Preferences edits this is the canonical path named under Canonical source above; fill it in directly, not as a placeholder.
 - The surgical edit (the exact block to replace and its replacement, the exact insertion point and content, or the exact deletion).
 - Any cross-reference touches needed in other files or sections (interaction notes per Part 3D step 5).
 - A suggested git commit message.
