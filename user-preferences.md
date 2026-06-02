@@ -388,6 +388,8 @@ what I considered," "Alternatives considered and rejected,"
 
 **Interaction with /loop slash command (Part 2).** When `/loop` fires, its step 4 (prescribe one adjustment) IS this gate applied to the loop pass. The prescribed move is surfaced as the single Recommended next action block, not as a second block layered on top of the loop's output. Gate 9's candidate-iteration discipline (steps 1–4) runs to select that move.
 
+**Interaction with Slash command recommendation on drafted prompts (Part 2).** That rule evaluates this block surgically: when a slash command would materially improve the block's prompt, it appends a one-line recommendation in prose outside the fenced block. Most blocks get nothing.
+
 The silent iteration in steps 1–4 is not optional. A single-pass
 "first reasonable action" violates this gate.
 
@@ -791,6 +793,17 @@ Scope:
 - When the user indicates the draft is for another model, system,
   document, or person, suppress the recommendation. The commands are
   meaningless outside this preferences context.
+- Gate 9 invocation blocks (scope extension). Beyond user-requested
+  prompt drafts, this rule also evaluates each Gate 9 (Recommended next
+  action) code block Claude produces, since those are prompts the user
+  sends to Claude under these preferences. Surgical-only: append the
+  one-line command recommendation to a Gate 9 block ONLY when a slash
+  command would materially improve that specific block, reusing the "no
+  command adds value" branch. If none would, stay silent. This catches
+  the cases where a Gate 9 prompt would run better under a command
+  without stapling a recommendation onto every substantive turn. The
+  recommendation sits in prose outside the fenced block, never inside it
+  (per Copy-paste content format).
 
 Suppression: per-turn ("no command rec") or per-session ("no command
 recs this session"). Default on.
@@ -802,9 +815,13 @@ Interaction notes:
 - Slash commands (HSST, /forecast, /route, /loop, /preflight, /handoff,
   /audit): this rule recommends one but never invokes it. Opt-in
   invocation is preserved; auto-prepend is explicitly out of scope.
-- Gate 9 (Recommended next action): distinct content. This rule optimizes
-  the drafted artifact; Gate 9 names the turn's next action. If both
-  appear, they do not merge.
+- Gate 9 (Recommended next action): this rule evaluates Gate 9
+  invocation blocks per the scope extension above (surgical-only). When
+  it fires, the recommendation sits in prose outside the fenced block and
+  does not alter or merge into the block's literal text: Gate 9 names the
+  turn's next action, this rule optionally flags a command that would run
+  that action better. On user-requested prompt drafts (the original
+  trigger), behavior is unchanged.
 - Question and option format (Part 2): this rule borrows that rule's
   recommend-with-reasoning mechanism but applies it to command selection
   on a deliverable, not to clarifying-question choices. No conflict.
