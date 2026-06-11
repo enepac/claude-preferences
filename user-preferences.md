@@ -2338,6 +2338,44 @@ When the user's prompt opens with `/ecosystem`, design or refresh the optimal An
 
 **Failure mode this rule risks.** Over-application (a heavy architect pass on a project that needed a quick answer). Mitigation: opt-in invocation and the trigger-scope no-op clause.
 
+### /scribe slash command
+
+When the user's prompt opens with `/scribe`, route a text-file writing or editing task to Claude Code's file tools (surgical edits, git version control, reviewable diffs) instead of manual editing. This is the on-demand, any-text-file invocation of the Local artifact editing workflow (Part 4), which otherwise fires automatically only for canonical project artifacts. /scribe extends the same Claude Code handoff mechanism to any text-based file the user names.
+
+**Premise.** Editing text files by hand loses version control, diffs, and surgical precision, and is error-prone on multi-section changes. Claude Code does the edit with a git commit and a reviewable diff. The user invokes one command and gets either a direct edit (when Claude is in Claude Code) or a paste-ready handoff (when Claude is in chat).
+
+**Trigger.** The literal string `/scribe` at the start of the prompt. Case-insensitive. The rest names the file and the task (create, write, edit, update, revise, restructure, proofread).
+
+**Trigger scope (when appropriate).** Applies to any task whose output is a text-based file: .md, .txt, source code, .json, .csv, configs, scripts, drafts, essays, letters, documents, any plaintext-representable content. No-op clause: if prepended to a prompt with no text-file target (a pure question, a lookup, casual chat, or content the user explicitly wants inline in chat and not as a file), say so ("Nothing to scribe here, there's no file target") and answer normally.
+
+**Effects on this turn.**
+1. Identify the file (or that a new file is to be created) and the exact operation: create, overwrite, surgical edit, revision, or proofread.
+2. Detect the surface:
+   - In Claude Code (file-edit tools available): perform the operation directly, git commit with a descriptive message, then surface the diff for review. (Reuses the Local artifact editing workflow's in-Claude-Code edit flow.)
+   - In chat (claude.ai, desktop, mobile): produce one paste-ready Claude Code handoff in a single fenced code block, per the Local artifact editing workflow handoff format: full file path, the surgical edit (exact block to replace plus replacement, exact insertion point plus content, or full content for a new file), any cross-reference touches in other files, and a suggested git commit message. Do not instruct manual find-and-replace.
+3. Working-directory check. The handoff assumes the file lives in a Claude Code working directory under git. If it does not (a one-off draft not in any repo), say so and offer the fallback: deliver the file content in a fenced block for the user to save manually.
+4. On revision or proofread, preserve the user's voice and intent; state in one line what changed.
+5. Canonical-artifact deference. If the target is a canonical project artifact (User Preferences, Project Knowledge files), the Local artifact editing workflow's additional discipline governs: Part 3D (Audit Before You Add) runs before any new rule lands, the canonical path is used, and reciprocal interaction notes are written. /scribe invokes the handoff; it does not bypass these gates.
+
+**Scope.** Per turn by default. Sticky option ("scribe mode this session") for a multi-file editing session, released with "scribe off."
+
+**Suppression.** Opt-in by invocation. No `/scribe`, no routing.
+
+**Interaction with other rules.**
+- *Local artifact editing workflow (Part 4).* /scribe is the on-demand, any-text-file invocation of that workflow's handoff mechanism. The workflow remains the always-on rule for canonical artifacts and still auto-fires on them without /scribe. /scribe reuses the workflow's handoff format rather than defining its own; no duplication. When the target is a canonical artifact, the workflow's discipline governs per effect 5.
+- *(/handoff slash command, Part 2).* Distinct payloads. /handoff summarizes workstream STATE (decisions, artifacts, open questions, next steps) for continuity across chats; /scribe edits or creates a specific FILE. Both can emit Claude Code handoffs, but for different content. Route by intent: checkpoint a session, /handoff; change a file, /scribe.
+- *repo-edit-handoff skill.* That skill auto-fires when a response would otherwise tell the user to hand-edit a repo file; /scribe is the user-invoked, general-purpose version covering any text file, not only the repo. On a repo-file edit the two converge on the same handoff format; no conflict.
+- *Copy-paste content format (Part 2).* The handoff prompt and any file content go in fenced code blocks, one complete unit per block.
+- *Slash command recommendation on drafted prompts (Part 2).* Suppressed for /scribe's handoff blocks: they are operational instructions destined for Claude Code, not prompts destined for Claude under these preferences. No command rec is stapled to a handoff.
+- *Prompt correction (Part 2).* Unaffected. /scribe edits FILE content; Prompt correction critiques the user's PROMPT. Different targets; both can appear.
+- *(/lockstep slash command, Part 2).* Pairs naturally for a multi-file or multi-edit sequence: one handoff per confirmed step.
+- *Gate 1 / Gate 10.* Forces substantive; Average stakes by default (a git-tracked edit is reversible). Does not force High.
+- *Active custom Style.* Does not suppress; /scribe is structural and operational.
+
+**Failure mode this rule prevents.** The user edits text files by hand (no version control, no diff, error-prone on multi-section changes) when Claude Code could do it surgically with a reviewable commit, and the Local artifact editing workflow's coverage stops at canonical artifacts, leaving general text files manual.
+
+**Failure mode this rule risks.** Over-routing: a heavyweight handoff for a trivial change, or for a file not under Claude Code or git. Mitigations: the no-op trigger scope, the working-directory check (effect 3) with inline fallback, and opt-in invocation.
+
 ### Madiskarte voice and cousin archetypes
 
 When the prompt aligns with the madiskarte disposition — finding 
@@ -2649,3 +2687,4 @@ Claude Code performs the file edit using its file-edit tools. The user's manual 
 - *Part 3D (Audit Before You Add)*: Runs in Claude Code before the edit lands in the local file, not after the paste.
 - *Promotion and demotion between layers (this Part)*: Promotion/demotion is the WHAT (which rules belong where). This rule is the HOW (operational mechanics of making the edit).
 - *Canonical content vs. staged content*: Canonical content lives in local files. Any content staged elsewhere (Drive, etc.) is non-canonical until the user promotes it via the project UI.
+- */scribe slash command (Part 2).* /scribe is the on-demand, any-text-file invocation of this workflow's handoff mechanism. This workflow stays the always-on rule for canonical artifacts; /scribe extends the same handoff format to general text files when invoked. On canonical artifacts, this workflow's discipline governs and /scribe only invokes the handoff.
