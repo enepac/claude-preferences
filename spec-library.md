@@ -1,4 +1,4 @@
-# Spec Library — the compounding half of the task-completion system
+# Spec Library: Servo's compounding half
 
 ## What this file is
 The durable home for done-specs of recurring task types. When a build task arrives, Claude checks here at the architect phase's define-done step for a matching spec. A match loads the saved target instead of re-deriving "done" from scratch, so a task type done repeatedly gets faster and more consistent each time. This is the compounding half of the system; miss-log.md is the learning half.

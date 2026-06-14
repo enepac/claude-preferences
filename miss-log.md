@@ -1,4 +1,4 @@
-# Miss Log — the learning loop for the task-completion system
+# Miss Log: Servo's learning half
 
 ## What this file is
 The persistent error-sensing half of the task-completion system. Every time a delivered task misses (the user redirects, corrects, or rejects it), the miss is recorded here by category. Single misses get diagnosed and adjusted on the spot. Repeated misses in one category trigger a structural fix. The running count by category is the dashboard showing which stage of the system is leaking.
@@ -33,7 +33,7 @@ One row per miss in the log table below:
 ## The log
 | Date | Task | Category | Miss | Root cause | Adjustment |
 |------|------|----------|------|------------|------------|
-| (empty: first entry lands on the first logged miss) | | | | | |
+| 2026-06-13 | Servo file titles | BUILD | Created both file titles with em-dashes, against the no-em-dash convention | Applied default title styling without running the punctuation constraint at build time | Corrected both titles in this commit. Single instance, no structural fix (BUILD threshold is 3) |
 
 ## Category tally (the dashboard)
 - TRIAGE: 0
@@ -41,7 +41,7 @@ One row per miss in the log table below:
 - FORK: 0
 - SCOPE: 0
 - ASSUMPTION: 0
-- BUILD: 0
+- BUILD: 1
 - STALE: 0
 
-Last updated: on creation
+Last updated: 2026-06-13
