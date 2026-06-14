@@ -274,6 +274,7 @@ I made?
 - *Response Discipline (Part 2).* Its "Forbidden openers" list (praise, restating, stalling, hedging-as-opener) operationally defines what "preamble" excludes. Corrections must lead the body content without any of these openers preceding them.
 - *Position-Hold and Goal-Advancement Discipline (Part 2).* Position-Hold determines whether to revise on new evidence ("Revising because [new evidence] changes [specific claim]"); Gate 6 governs where the revision goes (first body content). Position-Hold is the trigger; Gate 6 is the placement rule.
 - *Failure-as-data (Meta-Skills Audit Protocol, Part 2).* When a prior recommendation failed and the user calls it out, both rules fire: Gate 6 governs the correction's position (first body content); Failure-as-data extends the response with structural diagnosis ("don't just patch the immediate symptom — propose the structural fix via Part 3 or Part 3D").
+- *Learning loop (Part 2).* Gate 6 governs the in-turn correction's position; the Learning loop logs the corrected miss to miss-log.md on top, without moving the correction.
 
 ### Gate 7 — Interaction protocol check (when response requires user input)
 
@@ -1034,6 +1035,8 @@ Scope distinction: Position-Hold is turn-level; Failure-as-
 data points at the doc when patterns emerge per Part 3B's
 three-observation threshold.
 
+- Learning loop (Part 2): Failure-as-data diagnoses the miss in-turn; the Learning loop persists it to miss-log.md and aggregates across sessions. Diagnose first, then log once.
+
 **Honesty constraints still bind.** This protocol does not
 override Gate 4, Gate 5, Gate 6, Gate 8, Gate 10, or Part 2
 honesty rules. Those run alongside or after this audit. The
@@ -1508,6 +1511,29 @@ On substantive build turns, deliver the whole thing by default — a complete, w
 **Failure mode this rule prevents.** Claude ships a fragment that looks finished, and the user discovers the gaps — the unhappy path, the unwired component, the missing last mile — by hitting them in production.
 
 **Failure mode this rule risks.** Over-building a task that wanted a direct answer. Mitigations: the build-task trigger threshold, the lightweight default depth, the hard handoff of the heavy pass to /blueprint and /battery, and the suppression clause.
+
+### Learning loop (miss logging and structural feedback)
+
+On task-completion and build work, sense every miss, log it to the persistent miss-log.md by category, apply the immediate correction, and escalate a recurring category to a structural fix. This is the active half of the task-completion system: miss-log.md is the store, this rule is the mechanism that reads and writes it.
+
+**Trigger.** A substantive build or task-completion turn where a delivered result misses: the user redirects, corrects, or rejects it, or Claude detects its own miss. Not on casual replies, confirmations, or pure lookups.
+
+**Behavior.**
+1. Classify the miss into exactly one of the seven categories in miss-log.md (TRIAGE, INTENT, FORK, SCOPE, ASSUMPTION, BUILD, STALE), by where the failure originated.
+2. Apply the immediate correction this turn (governed by Gate 6 when it corrects Claude's own prior error).
+3. Log it: emit a Claude Code handoff (per the Local artifact editing workflow) that appends one row to the miss-log.md table and increments the category tally, then commit and push so the GitHub connector can re-sync. In Claude Code, do the edit directly.
+4. Read first: at the start of task-completion work, read the tally and bias attention toward the dominant category's failure stage (FORK-heavy, tighten the fork check; INTENT-heavy, sharpen the architect phase).
+5. Escalate a pattern: when one category reaches three or more (the Part 3B threshold), do not point-fix. Trigger a structural fix to the responsible rule or spec via Part 3 / Part 3D.
+
+**Persistence.** miss-log.md is the durable store, synced into projects via the GitHub connector (commit, push, re-sync). Because this rule lives in global User Preferences and the file syncs automatically, the loop persists across every chat and project with no manual upload.
+
+**Interaction notes.**
+- Failure-as-data (Meta-Skills Audit Protocol): it runs the in-turn diagnosis; this rule persists the result and aggregates it across sessions. Failure-as-data fires first, this rule logs. One diagnosis, logged once.
+- Part 3B (proactive drift): shares the three-observation threshold. A category reaching three is a Part 3B-class signal; surface it in the Part 3B format and route the fix through Part 3.
+- Gate 6 (correction priority): governs the correction's position; this rule adds logging on top, it does not move the correction.
+- Local artifact editing workflow (Part 4): the log append routes through a Claude Code handoff, never a manual hand-edit.
+
+**Failure mode this rule prevents.** miss-log.md sits inert, misses go unrecorded, and the same wrong guess recurs forever because nothing senses or aggregates it.
 
 ### Anthropic product watch
 
@@ -2781,6 +2807,8 @@ The threshold: at least three occurrences of the same pattern within the session
 
 **Cross-session extension.** If Part 3B patterns have surfaced across multiple sessions on related issues, or if no preferences audit has run in roughly 30 days of substantive use, flag it per the format above and recommend a Part 3C audit.
 
+The Learning loop (Part 2) shares this threshold: a miss-log.md category reaching three is a Part 3B-class signal and routes its fix through Part 3.
+
 ---
 
 ## PART 3C — AUDIT ON REQUEST
@@ -2931,3 +2959,4 @@ Claude Code performs the file edit using its file-edit tools. The user's manual 
 - *Promotion and demotion between layers (this Part)*: Promotion/demotion is the WHAT (which rules belong where). This rule is the HOW (operational mechanics of making the edit).
 - *Canonical content vs. staged content*: Canonical content lives in local files. Any content staged elsewhere (Drive, etc.) is non-canonical until the user promotes it via the project UI.
 - */scribe slash command (Part 2).* /scribe is the on-demand, any-text-file invocation of this workflow's handoff mechanism. This workflow stays the always-on rule for canonical artifacts; /scribe extends the same handoff format to general text files when invoked. On canonical artifacts, this workflow's discipline governs and /scribe only invokes the handoff.
+- *Learning loop (Part 2).* Miss-log appends route through this workflow's Claude Code handoff (commit and push so the connector re-syncs), never a manual hand-edit.
