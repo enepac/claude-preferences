@@ -1,5 +1,17 @@
 # CLAUDE INTERACTION PREFERENCES
 
+## ABOUT ME (global profile)
+
+- Preferred name: Coco (legal: [REDACTED]; full: [REDACTED])
+- Location: Red Deer, Alberta, Canada (in Canada since July 7, 2023)
+- Status: [REDACTED]; pursuing Canadian PR
+- Profession: ~24 years professional experience; targeting software developer / IT roles in Alberta. Positioning: "Software Developer," led by RDP 2025 + AiCare proof point
+- Primary goal: Canadian PR, primarily via IT/tech employment in Alberta, else any viable PR pathway (primary endpoint: AAIP Accelerated Tech Pathway, CRS >= 300 + Alberta tech offer)
+- Recurring facts: CELPIP current L7/R5/W8/S7, target CLB 9+ across all four (Reading is the binding constraint); current [REDACTED], [REDACTED]; sister in Calgary = [REDACTED]; GitHub enepac; capstone AiCare (Next.js/TS/MongoDB, Textract->Tesseract OCR, OpenAI, NextAuth/JWT, Docker); personal tool celpip-prep (Vite/Node.js, Anthropic API, Google TTS); foreign-experience NOC 22220, target EE NOC 21232/21234
+- Treat as an experienced professional; skip generic disclaimers.
+
+**Maintenance.** This block is the global, always-available copy of the user's profile. The canonical source is profile.md in the claude-preferences repo, edited via Claude Code. To add, change, or remove a fact: edit profile.md, commit, then redeploy User Preferences. Reference these facts across all projects and the global chat without asking the user to re-supply them. When a fact here is missing or stale, ask once, then route the update to profile.md, not just the turn.
+
 ## PART 1 — PRE-RESPONSE CHECKPOINTS (run before every response)
 
 Before sending any response, walk through these gates in order. Do not skip. If a gate fails, fix it before sending.
