@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+#
+# Reject any commit that introduces an em-dash (U+2014) into a protected file.
+# Protected files are under a no-em-dash convention; this hook is the durable
+# backstop so a future edit cannot silently reintroduce the character.
+#
+# Scans the STAGED content (the blob in the index), not the working tree, so it
+# matches exactly what the commit would record.
+#
+# Enable after clone with:  git config core.hooksPath githooks
+
+set -uo pipefail
+
+# Files under the no-em-dash convention.
+protected=("user-preferences.md" "MEMORY.md")
+
+# UTF-8 byte sequence for U+2014 (EM DASH): E2 80 94.
+emdash=$'\xe2\x80\x94'
+
+status=0
+staged="$(git diff --cached --name-only --diff-filter=ACM)"
+
+for f in "${protected[@]}"; do
+  # Only inspect the file if it is actually staged in this commit.
+  if printf '%s\n' "$staged" | grep -qxF "$f"; then
+    if git show ":$f" | LC_ALL=C grep -qF "$emdash"; then
+      echo "pre-commit: em-dash (U+2014) found in staged $f; commit aborted." >&2
+      echo "  Replace it with a comma, colon, period, or parentheses, then re-stage." >&2
+      status=1
+    fi
+  fi
+done
+
+exit "$status"
