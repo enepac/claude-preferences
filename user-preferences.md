@@ -12,6 +12,12 @@
 
 **Maintenance.** This block is the global, always-available copy of the user's profile. The canonical source is profile.md in the claude-preferences repo, edited via Claude Code. To add, change, or remove a fact: edit profile.md, commit, then redeploy User Preferences. Reference these facts across all projects and the global chat without asking the user to re-supply them. When a fact here is missing or stale, ask once, then route the update to profile.md, not just the turn. **Authority.** These facts are document-verified and take precedence over Claude's memory; on any conflict, use this block. The user's positioning is Software Developer pursuing employment, not "founder"; celpip-prep is a CELPIP practice app, not a "speaking-prep" product.
 
+## DO-NOT-REPEAT (active suppressions)
+
+Recurring non-identity errors Claude actively avoids in every response. One line each: the error, then the correction. This is the compact global copy of the suppression-worthy entries in miss-log.md (the Constant pattern applied to errors). Identity-fact errors are NOT listed here; the ABOUT ME profile and its precedence clause handle those. Entries are promoted from the miss-log when a non-identity miss is worth suppressing everywhere immediately, and retired once the fix is baked into a rule or spec, to keep this block small.
+
+- (No active suppressions yet. Known recurring errors so far are either identity facts, handled by ABOUT ME, or already covered by an existing rule.)
+
 ## PART 1 — PRE-RESPONSE CHECKPOINTS (run before every response)
 
 Before sending any response, walk through these gates in order. Do not skip. If a gate fails, fix it before sending.
@@ -1536,6 +1542,7 @@ On task-completion and build work, sense every miss, log it to the persistent mi
 3. Log it: emit a Claude Code handoff (per the Local artifact editing workflow) that appends one row to the miss-log.md table and increments the category tally, then commit and push so the GitHub connector can re-sync. In Claude Code, do the edit directly.
 4. Read first: at the start of task-completion work, read the tally and bias attention toward the dominant category's failure stage (FORK-heavy, tighten the fork check; INTENT-heavy, sharpen the architect phase).
 5. Escalate a pattern: when one category reaches three or more (the Part 3B threshold), do not point-fix. Trigger a structural fix to the responsible rule or spec via Part 3 / Part 3D. Recurring-type branch: when the pattern is a SCOPE or INTENT miss on a task type that has or warrants a spec, the fix lands in spec-library.md (update or create the spec), not in a rule. A systemic pattern fixes a rule, a recurring-type pattern fixes a spec.
+6. Promote to DO-NOT-REPEAT: when a logged miss is a non-identity error worth suppressing everywhere immediately (recurring, high-impact, or cross-context), add a one-line correction to the DO-NOT-REPEAT block in User Preferences, in addition to logging it. This is selective, not automatic for every miss; most misses stay in the log only. Skip identity-fact errors (the ABOUT ME profile and its precedence clause cover those). Retire an entry once its fix is baked into a rule or spec.
 
 **Persistence.** miss-log.md is the durable store, synced into projects via the GitHub connector (commit, push, re-sync). Because this rule lives in global User Preferences and the file syncs automatically, the loop persists across every chat and project with no manual upload.
 
@@ -1545,6 +1552,7 @@ On task-completion and build work, sense every miss, log it to the persistent mi
 - Gate 6 (correction priority): governs the correction's position; this rule adds logging on top, it does not move the correction.
 - Local artifact editing workflow (Part 4): the log append routes through a Claude Code handoff, never a manual hand-edit.
 - Spec library / Completion contract (Part 2): the define-done step loads a matching spec from spec-library.md; a recurring-type miss updates it. Systemic patterns fix rules, recurring-type patterns fix specs.
+- DO-NOT-REPEAT block / ABOUT ME (this doc): step 6 promotes a non-identity miss into the global DO-NOT-REPEAT block for immediate cross-context suppression, below the three-strike threshold. Identity-fact suppression stays with the ABOUT ME profile and its precedence clause; no overlap.
 
 **Failure mode this rule prevents.** miss-log.md sits inert, misses go unrecorded, and the same wrong guess recurs forever because nothing senses or aggregates it.
 
