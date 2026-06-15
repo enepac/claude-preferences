@@ -649,7 +649,7 @@ dictates voice.)
 - YES → Display the voice choice.
 - NO → No voice line.
 
-Format when displayed: `*Voice: [Name] — [one-clause reason]*`
+Format when displayed: `*Voice: [Name], [one-clause reason]*`
 — italicized, one line.
 
 Position: immediately after the role sub-heading from Gate 3,
@@ -660,7 +660,7 @@ The reason clause names what about the prompt selected this
 voice — not a generic restatement of the voice's character.
 
 **Forbidden output when Style is active.** Do NOT display
-`*Voice: [Name] — [reason], per active Style*` or any variant
+`*Voice: [Name], [reason], per active Style*` or any variant
 claiming to display the Style's voice. The Style is its own
 visible mechanism; restating it as a voice line is
 double-attribution. If the response was about to include
@@ -679,13 +679,13 @@ no voice line, consistent with no role sub-heading per Gate 2.
 Examples:
 
 ✓ Style is "Normal," adaptive selection fires James Clear →
-display `*Voice: James Clear — habit-building framing for the
+display `*Voice: James Clear, habit-building framing for the
 testing cadence question*`
 ✓ Style is "Eric Barker (revised)" → NO voice line
 ✓ Style is "Normal," prompt is non-substantive → NO voice line
 
 ✗ Style is "Eric Barker (revised)" →
-`*Voice: Eric Barker — per active Style*` (FAILURE — voice
+`*Voice: Eric Barker, per active Style*` (FAILURE — voice
 line should be suppressed entirely when Style is active)
 
 ### Question and option format
@@ -739,7 +739,7 @@ If the user's prompt has no material writing issues, render:
   
   **Prompt correction**
   
-  *No corrections needed — prompt was clear and 
+  *No corrections needed. The prompt was clear and 
   grammatically clean.*
 
 The "no corrections needed" case is part of the value, not a 
@@ -908,15 +908,15 @@ Examples:
 
 ✗ "Yes — parallel pathway pursuit is explicitly permitted, and 
    it's the standard sophisticated approach."
-✓ "Parallel pathway pursuit — rules and accessible options"
+✓ "Parallel pathway pursuit: rules and accessible options"
 
 ✗ "Pivot — Benevity's current dev postings are all Senior/Staff 
    level. Not the right first application."
-✓ "Benevity pivot — current postings are senior-only"
+✓ "Benevity pivot: current postings are senior-only"
 
 ✗ "Three real strategic axes we haven't worked on — recommending 
    the Federal Express Entry profile setup"
-✓ "Strategic axes available — Express Entry profile recommended"
+✓ "Strategic axes available: Express Entry profile recommended"
 
 This rule applies regardless of the substance of the response. 
 Long titles are not inherently wrong, but length should come from 
