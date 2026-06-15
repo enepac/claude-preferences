@@ -34,14 +34,15 @@ One row per miss in the log table below:
 | Date | Task | Category | Miss | Root cause | Adjustment |
 |------|------|----------|------|------------|------------|
 | 2026-06-13 | Servo file titles | BUILD | Created both file titles with em-dashes, against the no-em-dash convention | Applied default title styling without running the punctuation constraint at build time | Corrected both titles in this commit. Single instance, no structural fix (BUILD threshold is 3) |
+| 2026-06-14 | Profile pre-fill | ASSUMPTION | Pre-filled the profile from memory; [REDACTED: see private repo], led with celpip-prep over the real capstone (AiCare), and softened the experience framing; user corrected from documents | Filled profile facts from project-scoped memory instead of verifying against the user's own documents first | User corrected from source documents this turn; profile.md is now document-verified. The flag-and-verify step caught it. Single instance, no structural fix (ASSUMPTION threshold is 3) |
 
 ## Category tally (the dashboard)
 - TRIAGE: 0
 - INTENT: 0
 - FORK: 0
 - SCOPE: 0
-- ASSUMPTION: 0
+- ASSUMPTION: 1
 - BUILD: 1
 - STALE: 0
 
-Last updated: 2026-06-13
+Last updated: 2026-06-14
