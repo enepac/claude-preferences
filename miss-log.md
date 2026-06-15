@@ -36,6 +36,7 @@ One row per miss in the log table below:
 | 2026-06-13 | Servo file titles | BUILD | Created both file titles with em-dashes, against the no-em-dash convention | Applied default title styling without running the punctuation constraint at build time | Corrected both titles in this commit. Single instance, no structural fix (BUILD threshold is 3) |
 | 2026-06-14 | Profile pre-fill | ASSUMPTION | Pre-filled the profile from memory: [REDACTED: see private repo], omitted the RDP capstone AiCare entirely (not in memory), and softened the experience framing; user corrected from documents | Filled profile facts from project-scoped memory instead of verifying against the user's own documents first | User corrected from source documents this turn; profile.md is now document-verified. The flag-and-verify step caught it. Single instance, no structural fix (ASSUMPTION threshold is 3) |
 | 2026-06-14 | Profile vs memory blend | SCOPE | Deployed profile supplied correct facts, but stale memory leaked "founder" and "speaking-prep product" into the output; the profile did not override drifted memory | Profile's done-definition omitted a precedence clause making it authoritative over memory | Added a precedence clause to the ABOUT ME block and profile.md so the verified profile wins on conflict; mitigates, does not guarantee, memory leak. Single instance, no structural fix (SCOPE threshold is 3) |
+| 2026-06-14 | No-em-dash rule slip (fresh-chat test) | BUILD | A fresh-chat reply used two em-dashes, violating the global no-em-dash rule; the Punctuation rule did not fire | Existing rule present but not firing reliably across chats | Promoted em-dashes to the DO-NOT-REPEAT block as a blunt backstop. Second BUILD instance; one more hits the three-strike structural threshold |
 
 ## Category tally (the dashboard)
 - TRIAGE: 0
@@ -43,7 +44,7 @@ One row per miss in the log table below:
 - FORK: 0
 - SCOPE: 1
 - ASSUMPTION: 1
-- BUILD: 1
+- BUILD: 2
 - STALE: 0
 
 Last updated: 2026-06-14

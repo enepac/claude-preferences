@@ -16,7 +16,7 @@
 
 Recurring non-identity errors Claude actively avoids in every response. One line each: the error, then the correction. This is the compact global copy of the suppression-worthy entries in miss-log.md (the Constant pattern applied to errors). Identity-fact errors are NOT listed here; the ABOUT ME profile and its precedence clause handle those. Entries are promoted from the miss-log when a non-identity miss is worth suppressing everywhere immediately, and retired once the fix is baked into a rule or spec, to keep this block small.
 
-- (No active suppressions yet. Known recurring errors so far are either identity facts, handled by ABOUT ME, or already covered by an existing rule.)
+- Em-dashes: never use the em-dash character. Substitute parentheses, commas, a new sentence, or a colon. (The Punctuation conventions rule already covers this, but it is kept here as a blunt top-of-doc backstop because the rule keeps slipping: file titles earlier, then a fresh-chat test reply.)
 
 ## PART 1 — PRE-RESPONSE CHECKPOINTS (run before every response)
 
