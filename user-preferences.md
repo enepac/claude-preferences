@@ -2317,6 +2317,9 @@ progress check.
 - /battery (Part 2). Natural follow-up: run /battery on a delivered blueprint to
   stress-test the done-definition and the inventory before committing to the
   path.
+- /verify (Part 2). Direct consumer: /blueprint defines done as an observable
+  end-state (the acceptance criteria); /verify validates the build against that
+  definition. Run /blueprint to set the spec, /verify to check against it.
 - Completion contract, default end-to-end delivery (Part 2). /blueprint is the
   heavy, invoked form of the contract's steps 1–5; the Completion contract is the
   always-on default that triggers a lightweight version and hands the full pass to
@@ -2386,6 +2389,7 @@ When the user's prompt opens with `/battery`, stress-test the named target by tr
 - Copyright and citation. Paraphrase research findings, cite sources, do not over-quote.
 - /forge slash command (Part 2). /forge's step 8 is a lightweight self-check; /battery is the heavy red-team. /forge points to /battery when a build warrants a full stress-test before reliance.
 - /debug slash command (Part 2). Opposite posture, no double-run: /battery red-teams a design before it ships ("where could this break?"); /debug diagnoses a system that is already broken ("why is this broken?"). Natural follow-up: after /debug confirms a fix, run /battery on it to stress-test before reliance.
+- /verify slash command (Part 2). Complementary, opposite questions: /verify confirms the build meets its stated acceptance criteria ("does it do what it should?"); /battery red-teams it ("where could it break?"). Run /verify for acceptance, /battery for adversarial weaknesses; neither substitutes for the other.
 - /threatmodel slash command (Part 2). Distinct methodology, not a duplicate: /battery runs a generic adversarial pass on any claim or design; /threatmodel runs a security-specific review (attack surface, trust boundaries, per-element threat pass) and outputs severity-ranked findings. Route a security review to /threatmodel, a general red-team to /battery. /battery can stress-test a /threatmodel finding's proposed fix.
 
 **Failure mode this rule prevents.** A recommendation, plan, or artifact the user adopts without anyone having seriously tried to break it first.
@@ -2427,6 +2431,7 @@ Debug rules (apply across all steps):
 - /route slash command (Part 2). When /route diagnoses the task as "something already built is broken," it routes here and /debug runs the loop. /route picks the method, /debug executes it. The method is named in the steps, not as a voice line, so no double-attribution.
 - /loop slash command (Part 2). When a fix exceeds one pass, or the same class of bug recurs, /debug hands the remaining increments to /loop. /debug finds and fixes the cause; /loop drives multi-pass follow-through.
 - /forge slash command (Part 2). Distinct: /forge builds a new deliverable, /debug diagnoses an existing failure, and /forge's no-op routes a defect here. If the diagnosis reveals a missing component rather than a broken one, hand back to /forge to build it.
+- /verify slash command (Part 2). /verify surfaces a failing condition (proactive, run before a known failure); /debug diagnoses and fixes the cause (reactive). /verify hands each failure it finds to /debug.
 - /refactor slash command (Part 2). Different posture: /debug fixes broken behavior; /refactor restructures working behavior without changing it. If a refactor's characterization step reveals the code is already broken, stop and route to /debug first, since you cannot pin behavior you do not want to preserve.
 - /threatmodel slash command (Part 2). Different posture: /debug diagnoses an observed failure (wrong behavior you can reproduce); /threatmodel finds latent security weaknesses that may have no failing behavior yet. A vulnerability under active exploitation becomes a /debug case; an unexploited weakness is a /threatmodel finding.
 - Gate 4 / Gate 5 (verification). Step 1's missing-observation gathering uses Gate 4 Part A. When the bug turns on a dependency, version, API, or platform that may have changed since cutoff, Gate 5 fires before hypothesizing; recall is not permitted for changeable facts.
@@ -2543,6 +2548,54 @@ Refactor rules (apply across all steps):
 **Failure mode this rule prevents.** Changing behavior while believing it was preserved, refactoring with no test to catch the regression, and big-bang refactors where a break cannot be localized.
 
 **Failure mode this rule risks.** Over-ceremony on a trivial rename, or treating a behavior-changing edit as a refactor. Mitigations: the "just do it" suppression, the no-op trigger scope (behavior change routes to /forge or /debug), and opt-in invocation.
+
+### /verify slash command
+
+When the user's prompt opens with `/verify`, confirm that built software does what it is supposed to do by checking it against a spec or acceptance criteria: confirm the criteria, enumerate the conditions, map each to a test, run or author those tests, and report pass/fail per condition with the coverage gaps named. This is the acceptance-verification command, distinct from /battery (adversarial red-team), /debug (fix an observed failure), and /blueprint (define done).
+
+**Premise.** Verification confirms a build meets its stated criteria, not by trying to break it (that is /battery) and not by reacting to a known failure (that is /debug). The failure modes are declaring something done without checking it against the actual acceptance criteria, testing what is easy instead of what matters, and reporting a green pass while whole conditions go untested. /verify runs an acceptance pass against the done-definition and reports pass/fail with the gaps named.
+
+**Trigger.** The literal string `/verify` at the start of the prompt. Case-insensitive. The rest names what to verify (a build, a component, a feature, a repo) and, if available, the spec or acceptance criteria.
+
+**Trigger scope (when appropriate).** Applies to built or in-progress software with a spec or acceptance criteria to validate against. No-op clause: if there is nothing to verify against a spec (a request to build new, route to /forge; an adversarial red-team, route to /battery; an observed failure to diagnose, route to /debug; a pure lookup or definition), say so ("Nothing to verify here, there's no build-against-spec to validate") and answer normally. If there is a build but no spec, the first move is to recover the acceptance criteria (from /blueprint or by asking), not to invent a pass.
+
+**Effects on this turn, run the verification pass in order.**
+1. CONFIRM THE SPEC. State the acceptance criteria being verified against. If a /blueprint done-definition exists, use it as the spec. If none exists, recover the criteria from the user (one question at a time, Gate 7) or from the code's documented intent before testing. You cannot verify against a spec you do not have.
+2. ENUMERATE THE CONDITIONS. Break the spec into the discrete, checkable conditions that must each hold for the build to be accepted: the happy path, the named edge cases, the error paths, and any specified non-functional requirements. This is the checklist the pass runs against.
+3. MAP CONDITION TO TEST. For each condition, identify the test that proves it: an existing test, a test to author, or a manual check. Name which conditions have no test yet; those are the coverage gaps.
+4. RUN OR AUTHOR. Run the existing tests and author the missing ones for the uncovered conditions. Where authoring tests edits a repo, route through a Claude Code handoff per the Local artifact editing workflow.
+5. REPORT PASS/FAIL PER CONDITION. For each condition: pass, fail, or untested. Lead with failures and untested conditions, not with the passes. Do not report an overall green while conditions remain untested; an untested condition is a gap, not a pass.
+6. ROUTE FAILURES AND STATE RESIDUAL RISK. Hand each failing condition to /debug for diagnosis (verification finds the failure, /debug finds the cause). Name what the pass could not verify (conditions with no observable oracle, environment-specific behavior, non-functional requirements that were never specified) so the user knows the boundary of the green report.
+
+Verify rules (apply across all steps):
+- Verify against the spec, not against what is easy to test. A pass that covers the convenient conditions and skips the hard ones is the core failure mode.
+- An untested condition is a gap, never a pass. Report it as such.
+- No green without the evidence. State which conditions are confirmed by a real test versus asserted.
+- Confirm requirements met; do not red-team. Finding novel weaknesses is /battery's job; /verify checks the stated criteria.
+- A failure is routed, not fixed here. /verify surfaces failures; /debug diagnoses and fixes them.
+
+**Scope.** The turn it appears on, unless the user is in an ongoing verification thread, in which case it persists until the pass resolves. When verification spans many conditions or files, /verify completes the spec confirmation and the first conditions, then hands off to /loop for the remaining increments.
+
+**Suppression.** Opt-in by invocation. No `/verify`, no verification pass. Per-turn "smoke only" runs the happy-path conditions only and names that the edge and error paths were not covered.
+
+**Interaction with other rules.**
+- /battery slash command (Part 2). Complementary, opposite questions: /verify confirms the build meets its stated acceptance criteria ("does it do what it should?"); /battery red-teams it ("where could it break?"). Run /verify for acceptance, /battery for adversarial weaknesses; neither substitutes for the other.
+- /debug slash command (Part 2). /verify surfaces a failing condition (proactive, run before a known failure); /debug diagnoses and fixes the cause (reactive). /verify hands each failure it finds to /debug.
+- /blueprint slash command (Part 2). Direct input: /blueprint defines done as an observable end-state (the acceptance criteria); /verify validates the build against that definition. Run /blueprint to set the spec, /verify to check against it. If no done-definition exists, /verify recovers one before testing.
+- /forge slash command (Part 2). /forge builds; /verify confirms the build meets spec. /forge's no-op routes a verification request here. Natural sequence: /forge builds the component, /verify validates it against the done-definition.
+- Completion contract, default end-to-end delivery (Part 2). /verify is the heavy, invoked form of the contract's step 6 (stress-test and self-check before commit), the way /battery is its red-team form. The contract runs a lightweight self-check by default and points to /verify for a full acceptance pass. When /verify is invoked, it owns the verification; the default rule does not re-run it.
+- Gate 4 / Gate 5 (verification). When a condition turns on a changeable fact (a library's current behavior, a platform default, an external service's current response), Gate 5 fires before asserting a pass; recall is not permitted for changeable facts. A pass that depends on the user's environment routes to Gate 4 Part B.
+- Gate 9 (Recommended next action). The highest-priority failing or untested condition's next step is surfaced as the Gate 9 block; the full per-condition report lives in the body.
+- Gate 10 (stakes). Verifying software that handles real user data or money before release can be High on its own merits; classify normally.
+- Local artifact editing workflow / repo-edit-handoff / /scribe (Part 4, Part 2). Authoring or editing tests in a repo routes through a Claude Code handoff, not an inline dump.
+- Learning loop (Part 2). A condition that repeatedly ships untested is a BUILD or SCOPE miss; log it and escalate at three per Part 3B.
+- Adaptive voice (Part 2). Gawande (acceptance checklist) or Ericsson (precise criteria) usually fit; /verify sets the method, voice sets the prose.
+- Honesty rules (Part 2). No overall green while conditions are untested; the residual-risk statement is mandatory and hedged with its basis.
+- /high-stakes, /preflight, /audit, /lockstep (Part 2). Coexist; /verify is body content. /lockstep pairs for confirming conditions one at a time.
+
+**Failure mode this rule prevents.** Declaring software done without checking it against the actual acceptance criteria, testing the convenient conditions while the hard ones go uncovered, and reporting a green pass while whole conditions remain untested.
+
+**Failure mode this rule risks.** Over-testing a trivial build, or duplicating /battery's adversarial work. Mitigations: the "smoke only" suppression, the no-op trigger scope, the confirm-requirements-not-red-team rule, and opt-in invocation.
 
 ### /lockstep slash command
 
@@ -2828,7 +2881,7 @@ When the user's prompt opens with `/forge`, run the full architect-then-engineer
 
 **Trigger.** The literal string `/forge` at the start of the prompt. Case-insensitive. The rest names the task to build (a document, plan, fix, component, deliverable).
 
-**Trigger scope (when appropriate).** Applies to build tasks: anything whose output is a constructed deliverable. No-op clause: if prepended to a non-build task (a decision under uncertainty → /forecast or /route; a habit or consistency problem → /loop or /route; a locked-door problem → Madiskarte; a defect in existing code → /debug; a behavior-preserving refactor of existing code → /refactor; a security review of an app → /threatmodel; a pure lookup or definition), say so ("Nothing to forge here, this isn't a build task, route it to [fitting tool]") and answer normally. The diagnosis comes before the forge: /forge builds, it does not decide what kind of problem it is holding.
+**Trigger scope (when appropriate).** Applies to build tasks: anything whose output is a constructed deliverable. No-op clause: if prepended to a non-build task (a decision under uncertainty → /forecast or /route; a habit or consistency problem → /loop or /route; a locked-door problem → Madiskarte; a defect in existing code → /debug; a QA pass to verify a build against its spec → /verify; a behavior-preserving refactor of existing code → /refactor; a security review of an app → /threatmodel; a pure lookup or definition), say so ("Nothing to forge here, this isn't a build task, route it to [fitting tool]") and answer normally. The diagnosis comes before the forge: /forge builds, it does not decide what kind of problem it is holding.
 
 **Effects on this turn, run the 9 steps in two visible phases.**
 
