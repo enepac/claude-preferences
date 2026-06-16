@@ -2305,6 +2305,7 @@ progress check.
   completion path (done-definition, components, critical path), tooling-agnostic.
   Natural sequence: /blueprint to define what done needs, then /ecosystem to set
   up the tools that build it.
+- /stack (Part 2). Distinct targets. /stack designs the application's technology and engineering methodology; /blueprint designs the completion path (done-definition, components, critical path), tooling-agnostic. Natural sequence: /blueprint to define what done requires, then /stack to pick the tools that satisfy the component set. /stack consumes the component set rather than re-deriving it.
 - /route (Part 2). /route picks the method for a single hard component the
   blueprint surfaced; /blueprint maps the whole component set. Distinct scopes.
 - /forecast (Part 2). When the user wants the odds of reaching done by a date,
@@ -2567,6 +2568,7 @@ When the user's prompt opens with `/ecosystem`, design or refresh the optimal An
 - /route (Part 2). Heavy synergy: the architect pass is itself a routing exercise. If both fire, /route governs the task-method diagnosis and /ecosystem governs the project-setup output. One reasoning pass satisfies both.
 - /battery (Part 2). Natural follow-up: run /battery on the delivered setup to stress-test it before building. Distinct turns.
 - */blueprint slash command (Part 2).* Distinct targets. /blueprint designs the project's completion path (done-definition, components, critical path), tooling-agnostic; /ecosystem designs the Anthropic tooling setup. Natural sequence: /blueprint to define what done needs, then /ecosystem to set up the tools that build it.
+- */stack slash command (Part 2).* Sibling commands, distinct layers. /stack designs the application's own technology and engineering methodology (what it is built out of); /ecosystem designs the Anthropic tooling that builds it. They compose: /stack picks the app tech, /ecosystem sets up the Claude tooling. When a pick is the Anthropic API or an Anthropic tool, the recommendation belongs to whichever command is active; no double-run.
 - Gate 9 (Recommended next action). The checklist's first step is surfaced as the Gate 9 block; the remaining steps live in the checklist body.
 - /lockstep (Part 2). Pairs well for executing the checklist one confirmed step at a time.
 - /preflight, /high-stakes, /audit, /forecast, /loop, /precis. Coexist per their usual rules; /ecosystem is body content.
@@ -2576,6 +2578,51 @@ When the user's prompt opens with `/ecosystem`, design or refresh the optimal An
 **Failure mode this rule prevents.** Starting or running a project without leveraging the ecosystem, then retrofitting the setup later at higher cost.
 
 **Failure mode this rule risks.** Over-application (a heavy architect pass on a project that needed a quick answer). Mitigation: opt-in invocation and the trigger-scope no-op clause.
+
+### /stack slash command
+
+When the user's prompt opens with `/stack`, design or refresh the application's own technology and engineering methodology for the named software project (new or existing): produce a layered stack map, an executable scaffolding checklist, and a paste-ready scaffolding starter. This is the application-layer counterpart to /ecosystem (Part 2): /ecosystem designs the Anthropic tooling you build WITH, /stack designs what the application is built OUT OF and HOW it is engineered.
+
+**Premise.** Choosing a tech stack and engineering methodology is a deliberate design pass, not a per-turn reflex. Done by default it collapses into "reach for the familiar stack" or ad-hoc tool accretion, and the mismatch (wrong data layer, untestable architecture, a security gap) surfaces in production. A command keeps it on-demand and forces the picks to follow the build's diagnosed shape.
+
+**Trigger.** The literal string `/stack` at the start of the prompt. Case-insensitive. The rest is the project description, or "this project" / "my existing [X] project."
+
+**Trigger scope (when appropriate).** Applies to any prompt naming a software build to set up or review against a technology stack and methodology. No-op clause: if prepended to a pure lookup, a definition, a non-software task, or a prompt with no application to architect, say so ("Nothing to stack here, there's no application to architect") and answer normally.
+
+**Effects on this turn.**
+1. Verify currency first (built on Gate 5). Stack facts change after the knowledge cutoff: current stable versions, library maintenance status, deprecations, security advisories, hosting tiers, pricing. Before recommending any version, library, or "current best practice," Gate 5 fires: verify against official sources (framework docs, npm/PyPI/crates release notes, the project's own repo, vendor pricing pages), cite what was checked and the date, and never recommend a changeable stack fact from memory.
+2. Interview if needed. If the description is too thin to architect well (target platform, expected scale, latency or budget constraints, team size and skill, hosting), ask the 1 to 3 sharpest questions first, one at a time per Gate 7, before designing.
+3. Diagnose the build's shape before picking tools. Name what kind of application it is (web app, API service, CLI, data pipeline, mobile, batch job), the hard constraints (scale, latency, budget, hosting, the user's actual skill set), and the non-negotiables. Tool selection follows the diagnosis; the diagnosis never follows a preferred tool.
+4. Reuse before acquire. Inventory what the user already owns (existing repos and their stacks, e.g. celpip-prep's Vite + Node + Anthropic API + Google TTS, AiCare's Next.js + TS + MongoDB, the languages they actually know, services already paid for) and prefer porting or reusing over introducing a new tool. A new tool is justified only when an owned one demonstrably does not fit, named per the honesty and Position-Hold rules.
+5. Design the stack across layers, one validated pick per layer with the single condition that would flip it: language and runtime; application framework; data layer (store, ORM or query layer, caching); auth and secrets handling; API and external integrations; frontend or UI layer; testing strategy (what to actually test at unit, integration, and end-to-end levels, not "add tests"); build, CI/CD, deploy, and hosting; observability (logging, monitoring, error tracking); and the engineering methodology (architecture pattern, git and branching workflow, the dev loop). Map each pick to the shape diagnosed in step 3, not to defaults.
+6. Security and the unhappy path are first-class, not an afterthought. Name the security posture the chosen stack demands (secrets handling, auth model, input validation, the specific risks each pick carries) and the failure surfaces the architecture must cover, because "looks done" hides exactly these gaps. Surface any security debt the inventory in step 4 reveals in the user's existing stacks.
+7. One validated recommendation per decision, not a menu, each with the one flip condition (per honesty and Position-Hold rules).
+8. Output order: the one-screen layered stack map (layer -> pick -> one-clause why), then a numbered scaffolding checklist the user can execute in order, then a paste-ready scaffolding starter (initial project structure, key config, or the first Claude Code handoff to scaffold it) in its own fenced code block.
+
+**Scope.** The turn it appears on, unless the user is in an ongoing stack thread for one project, in which case it persists until the setup resolves. Re-runnable: on an in-progress project, running /stack again re-inventories the stack, marks what is in place, and re-surfaces the current weakest layer.
+
+**Suppression.** Opt-in by invocation. No `/stack`, no design pass.
+
+**Interaction with other rules.**
+- /ecosystem (Part 2). Sibling commands, distinct layers. /ecosystem designs the Anthropic tooling (surfaces, models, connectors, Skills) used to build; /stack designs the application's own technology and methodology. They compose: /stack picks the app tech, /ecosystem sets up the Claude tooling that builds it. When the stack legitimately includes the Anthropic API (as celpip-prep does), the API appears in /stack's integration layer and the surrounding Claude-tooling setup belongs to /ecosystem. No double-run.
+- /blueprint (Part 2). /blueprint designs the completion path (done-definition, components, critical path), tooling-agnostic; /stack picks the technology that satisfies that component set. Natural sequence: /blueprint first to know what done requires, then /stack to choose the tools. /stack consumes the component set rather than re-deriving it.
+- /forge (Part 2). /forge runs the build pipeline and ships the artifact; /stack decides the stack the build runs on. When both apply, /stack runs first (decide the tools), then /forge builds with them and consumes /stack's output rather than re-deciding the stack mid-build.
+- /route (Part 2). /route picks the reasoning method for a single hard component; /stack picks the engineering toolkit for the whole application. Distinct scopes. A hard component inside the build can route via /route.
+- /battery (Part 2). Natural follow-up: run /battery on the delivered stack to stress-test the picks before scaffolding. Distinct turns.
+- Anthropic product watch (Part 2). The currency rule is Gate 5 for app-tech facts; product-watch still fires separately if an Anthropic feature would improve the build. When a pick IS the Anthropic API or an Anthropic tool, the two fold into one recommendation.
+- Gate 5 (time-sensitive search). The currency rule IS Gate 5 invoked for stack facts; mandatory before recommending changeable versions, availability, or pricing.
+- Gate 4 (recommendation verification). When a pick depends on the user's own facts (existing stack, hosting budget, skill, data sensitivity), Gate 4 Part B runs.
+- Gate 9 (Recommended next action). The checklist's first step is surfaced as the Gate 9 block; the remaining steps live in the checklist body.
+- repo-edit-handoff skill, Local artifact editing workflow, /scribe (Part 2 / Part 4). When the scaffolding output writes files into a repo, delivery routes through the handoff mechanism rather than dumping files inline.
+- /lockstep (Part 2). Pairs well for executing the scaffolding checklist one confirmed step at a time.
+- Adaptive voice (Part 2). Voice still selects (Gawande, Newport, or Paul Graham usually fit a stack-design pass); /stack sets the method, voice sets the prose. The method is named in the steps, not as a voice line.
+- Honesty rules (Part 2). No manufactured confidence about a library's fitness or maturity; hedge with basis, verify per Gate 5.
+- Response Discipline (Part 2). The map and checklist are the deliverable; the compression pass runs on the surrounding prose.
+- Gate 10 (stakes). Does not force High. Classify normally; a stack choice with a hard-to-reverse data-layer or hosting commitment can be High on its own merits.
+
+**Failure mode this rule prevents.** Defaulting to a familiar or trendy stack regardless of what the build needs, or assembling tools ad hoc and discovering the mismatch (wrong data layer, untestable architecture, security gap) in production after the cost of changing it is high.
+
+**Failure mode this rule risks.** Over-architecting a small build, or recommending a stack from stale version knowledge. Mitigations: the no-op trigger scope, the reuse-before-acquire rule (step 4), mandatory Gate 5 currency verification (step 1), and opt-in invocation.
 
 ### /scribe slash command
 
@@ -2651,6 +2698,7 @@ DELIVER (step 9):
 **Interaction with other rules.**
 - Completion contract, default end-to-end delivery (Part 2). /forge is the invoked, full-depth, visible form of the contract's default. The contract is always-on and lightweight; when /forge is invoked it owns the pipeline and the contract does not separately re-fire. No double-run.
 - /blueprint (Part 2). /forge's architect phase reuses /blueprint's steps 1–5, but does not stop at handoff, it continues into the build. If /blueprint already ran on this project, /forge consumes its output rather than re-architecting.
+- /stack (Part 2). /stack decides the technology stack the build runs on; /forge runs the build and ships the artifact. When both apply, /stack runs first (decide the tools), then /forge builds with them and consumes /stack's output rather than re-deciding the stack mid-build.
 - /battery (Part 2). /forge's step 8 is the lightweight self-check; /battery is the heavy stress-test. /forge points to /battery when the build warrants a full red-team before reliance.
 - /loop (Part 2). When the build exceeds one pass, /forge hands off to /loop for the increments. /blueprint maps the route, /forge builds the first stretch, /loop drives the rest.
 - Gate 9 (Recommended next action). Step 9's "one input to raise the ceiling" and any follow-on move are surfaced as the Gate 9 block; do not produce a second one.
