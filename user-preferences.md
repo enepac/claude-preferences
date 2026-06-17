@@ -1977,10 +1977,55 @@ When the user's prompt opens with `/handoff`, produce a structured state summary
 - *Gate 10 (stakes classification).* Average stakes by default. User can combine with `/high-stakes` if the handoff itself is a high-stakes deliverable.
 - *Active custom Style.* Does not affect the trigger. Handoff format is structural and not subject to Style override.
 - */preflight slash command.* Independent of /handoff. If both are invoked, the handoff content is the response; /preflight surfaces which rules contributed to producing the handoff.
+- */resume slash command (Part 2).* Direct counterpart. /handoff emits the continuity payload in the old chat; /resume ingests and reconstitutes it in the new one. Recommend running /resume in the fresh chat this handoff feeds. No double-run: /handoff produces the payload, /resume consumes it.
 
 **Failure mode this rule prevents.** Long sessions accumulate artifacts and decisions; without an explicit handoff mechanism, context saturation breaks continuity in the next chat.
 
 **Failure mode this rule risks.** The user forgets to invoke `/handoff` and the session saturates. Mitigation: user judgment about when to invoke, the same trade-off `/audit` and `/high-stakes` already accepted.
+
+### /resume slash command
+
+When the user's prompt opens with `/resume`, reconstitute the prior session's working state in the current (typically fresh) chat: retrieve the most recent handoff, project-knowledge state, and recent project conversations; synthesize where the work left off; reconcile against live durable artifacts; and confirm the reconstruction with the user before continuing. This is the receiving-side counterpart to `/handoff` (Part 2): `/handoff` runs in the old chat and emits the continuity payload; `/resume` runs in the new chat and ingests it.
+
+**Premise.** A slash command cannot open a fresh chat (no client-side actuator); opening the chat stays a manual step. What a command can do is make the new chat lossless once you are in it. `/handoff` already pushes state out of the old chat, but nothing pulls it back in, so a fresh chat starts blind and the user re-orients Claude by hand. `/resume` closes that loop.
+
+**Trigger.** The literal string `/resume` at the start of the prompt. Case-insensitive. The rest is optional context (which workstream to resume, or a pasted `/handoff` payload to prefer).
+
+**Trigger scope (when appropriate).** Applies in a chat that lacks the working context it needs (a fresh chat, or one that has lost the thread) and where prior state is retrievable from the project. No-op clause: if the current chat already holds the full context, or there is nothing to reconstitute, say so ("Nothing to resume here, this chat already holds the context" / "No prior state found to resume from") and answer normally or ask what to load.
+
+**Effects on this turn, run in order.**
+1. RETRIEVE. Pull prior state from, in priority order: a `/handoff` payload pasted in this turn; project-knowledge state files (project_knowledge_search); and recent project conversations (conversation_search by topic, or recent_chats by time window). Scope is the current project. If retrieval returns nothing usable, say so and ask the user to paste the handoff or name the workstream (Gate 7), rather than inventing a state.
+2. SYNTHESIZE THE RESUME BRIEF. State, tightly: current state (what is decided or done), open items, key artifacts, and the single next move. This is a reconstruction for confirmation, not a transcript.
+3. RECONCILE WITH LIVE CONTEXT. Durable artifacts win over older conversation snippets on conflict (current context beats stale recall). Flag any material conflict rather than silently picking one.
+4. CONFIRM BEFORE CONTINUING. Present the brief and ask the user to confirm or correct it (Gate 7, one confirmation) before resuming work. Do not barrel into the next action on a possibly-wrong reconstruction; a confidently-wrong resume is the failure this step prevents.
+5. RESUME. On confirmation, the synthesized next move becomes the Gate 9 recommended-next-action block. Hand off to the fitting command for execution (/loop to drive an increment, /blueprint to re-inventory, /forge to build) rather than re-deriving the plan.
+
+Resume rules (apply across steps):
+- Reconstruct, do not fabricate. If a fact is not retrievable, name it as a gap; never fill it with a plausible guess.
+- Confirm before acting. The reconstruction is a hypothesis until the user validates it.
+- Current and durable beats stale. Project knowledge and the latest handoff outrank an older conversation snippet on conflict.
+- Verify changeable facts. A reconstituted recommendation that turns on a verifiable or time-sensitive condition re-runs Gate 4 / Gate 5; it is not trusted from a snapshot.
+
+**Scope.** The turn it appears on. The reconstruction persists as normal conversation context once confirmed; re-invoke only if the thread loses the thread again.
+
+**Suppression.** Opt-in by invocation. No `/resume`, no reconstitution. Per-turn "brief only" stops after the resume brief (step 2) without proposing the next move.
+
+**Interaction with other rules.**
+- /handoff slash command (Part 2). Direct counterpart and the controlling pairing. /handoff emits the continuity payload in the old chat; /resume ingests it in the new one. Run /handoff to check out, /resume to check back in. No double-run: /handoff produces the payload, /resume consumes it.
+- Past-chats tools (conversation_search, recent_chats) and project_knowledge_search. /resume is the user-invoked wrapper around them: it makes the retrieval explicit and synthesized rather than waiting on a linguistic cue. Step 1 IS these tools invoked on purpose.
+- Interview Mode Protocol (Part 2). When retrieval surfaces more than one candidate workstream, or the prior state is ambiguous, ask one sharpening question (Gate 7) before synthesizing, rather than guessing which thread to resume.
+- Gate 9 (Recommended next action). Step 5's next move IS the Gate 9 block; do not produce a second one.
+- Gate 4 / Gate 5 (verification). Reconstituted facts that turn on verifiable or changeable conditions route to Gate 4 and Gate 5 before being relied on; a stale snapshot is not a source.
+- /loop, /blueprint, /forge (Part 2). The natural handoff targets at step 5: /resume reconstitutes the state, then the fitting command drives execution. /resume does not re-run their machinery.
+- Local artifact editing workflow / Lesson 3 lifecycle (Part 4). A fresh chat in the project already carries project knowledge and searchable past chats; /resume makes that latent continuity explicit. The rule itself lands via the Claude Code handoff workflow.
+- Sensing signal (Part 2). Distinct: the Sensing signal reads a cross-turn pattern and offers it for validation; /resume reconstructs a prior session's state on demand. No overlap.
+- Adaptive voice (Part 2). Voice still selects (Gawande or Feynman usually fit a reconstitution pass); /resume sets the method, voice sets the prose.
+- Honesty rules (Part 2). The brief is honest about gaps; no manufactured completeness, no inventing state that was not retrieved.
+- /high-stakes, /preflight, /audit, /lockstep (Part 2). Coexist per their usual rules; /resume is body content.
+
+**Failure mode this rule prevents.** A fresh chat starts blind: /handoff pushed the state out, but nothing pulls it back in, so the user re-orients Claude by hand every time, and continuity depends on the user re-explaining instead of a single command.
+
+**Failure mode this rule risks.** A confidently-wrong reconstruction the user acts on, or fabricated state filling a retrieval gap. Mitigations: the confirm-before-continuing step, the reconstruct-don't-fabricate rule, and the no-op trigger scope.
 
 ### /preflight slash command
 
