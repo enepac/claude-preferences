@@ -2988,13 +2988,13 @@ DELIVER (step 9):
 ### /sdlc slash command
 
 When the user's prompt opens with `/sdlc`, run the full, human-gated application
-build lifecycle for a named app: a discovery interview, then the lifecycle
-blueprint, stack and methodology, ecosystem setup, the gated build, and a capture
-step that turns the run into a reusable asset. This is the project-lifecycle
-orchestrator. It does not reinvent the phase tools; it sequences the existing
-commands (/blueprint, /stack, /ecosystem, /forge, /loop) behind an interview-first,
-approval-gated spine, so building any app follows the same repeatable path and
-compounds across projects.
+build lifecycle for a named app: a discovery pass (self-sourced for an existing
+project, interviewed for a new one), then the lifecycle blueprint, stack and
+methodology, ecosystem setup, the gated build, and a capture step that turns the run
+into a reusable asset. This is the project-lifecycle orchestrator. It does not
+reinvent the phase tools; it sequences the existing commands (/blueprint, /stack,
+/ecosystem, /forge, /loop) behind a discovery-first, approval-gated spine, so
+building any app follows the same repeatable path and compounds across projects.
 
 **Premise.** The deterministic stretch of the SDLC can be automated, but the
 judgment stretch (what to build, which trade-offs, when to ship) needs human
@@ -3004,7 +3004,7 @@ The leverage is the orchestration: each phase tool already exists; what was miss
 was one lever that runs them in order, gated, every time.
 
 **Trigger.** The literal string `/sdlc` at the start of the prompt. Case-insensitive.
-The rest names the app to build, or is empty (the discovery interview surfaces it).
+The rest names the app to build, or is empty (the discovery pass surfaces it).
 
 **Trigger scope (when appropriate).** Applies to building an application from idea
 toward ship, new or in-progress. No-op clause: if prepended to a single-deliverable
@@ -3013,12 +3013,21 @@ build (route to /forge), a tooling-only setup (/ecosystem), a stack-only decisio
 here, route it to [fitting command]") and answer normally.
 
 **Effects on this turn, run the phases in order with a hard gate between each.**
-0. DISCOVERY INTERVIEW. Run Interview Mode (one question at a time, Gate 7) until the
-   full picture is in hand: problem and user; definition of done and success; the
-   smallest shippable version; hours, budget, timeline, platform; out-of-scope for
-   v1; users and auth; data model and location; integrations; privacy and
-   data-sensitivity; and the reuse inventory from existing repos. Summarize back.
-   [GATE]
+0. DISCOVERY (self-source first, then ask only the gaps).
+   New project: run Interview Mode (one question at a time, Gate 7) for problem and
+   user, what "done"/"success" look like, smallest shippable version, hours, budget,
+   timeline, platform, out-of-scope for v1, users and auth, data model and location,
+   integrations, privacy/data-sensitivity, and reuse inventory.
+   Existing or in-progress project: do NOT interview for what the artifacts already
+   hold. First self-source the current-state inventory by reading the project docs
+   and the codebase (in Claude Code, read the live repo; in a project chat, read
+   Project Knowledge and search past chats, and flag that the snapshot may lag live).
+   Derive what exists, what is done, what is wired vs stubbed, and what is left.
+   Present that derived picture for the user to confirm or correct, and ask the user
+   ONLY for what the artifacts cannot answer: forward intent, current priority, what
+   "done" means from here, out-of-scope for the next version, and decisions that live
+   only in their head. Flag UNKNOWNs rather than guessing.
+   Either path: summarize the full picture back. [GATE]
 1. BLUEPRINT. Run /blueprint: define done as an observable end-state, decompose into
    the complete atomic component set, inventory HAVE/NEED/UNKNOWN, expose the
    critical path and bottleneck. [GATE]
@@ -3059,8 +3068,11 @@ ecosystem" drops that phase when the user already has its output.
   pass. No double-run within a lifecycle.
 - /forge, /loop (Part 2). Phase 4 uses /forge per component and /loop for multi-pass
   increments. /forge owns the build pipeline; /sdlc owns the cross-phase orchestration.
-- Interview Mode Protocol / Gate 7 (Part 1). Phase 0 IS Interview Mode. If the app is
-  already fully specified, /sdlc may skip to Phase 1 and flag the assumption.
+- Interview Mode Protocol / Gate 7 (Part 1). Phase 0 runs Interview Mode in full for
+  a new project; for an existing project it self-sources current state from docs and
+  code first, then runs Interview Mode only on the forward-looking gaps. One question
+  at a time. If the project is already fully specified, /sdlc may skip to Phase 1 and
+  flag the assumption.
 - Gate 9 (Recommended next action). Each phase ends with its gate as the single next
   action; do not stack a second Gate 9 block on top.
 - Local artifact editing workflow / repo-edit-handoff / /scribe (Part 4, Part 2). All
@@ -3074,7 +3086,8 @@ ecosystem" drops that phase when the user already has its output.
 - Adaptive voice (Part 2). Voice still selects (Gawande or Newport usually fit); /sdlc
   sets the method, voice sets the prose.
 - /high-stakes, /preflight, /audit, /lockstep (Part 2). Coexist; /sdlc is body content.
-  /lockstep pairs with Phase 4 to land each increment one confirmed step at a time.
+  /lockstep pairs naturally with Phase 4 to land each increment one confirmed step at a
+  time.
 
 **Failure mode this rule prevents.** Building each app ad hoc, re-deriving the process
 every time, so nothing compounds and phases get skipped or reordered under pressure.
