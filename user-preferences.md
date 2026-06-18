@@ -1978,6 +1978,7 @@ When the user's prompt opens with `/handoff`, produce a structured state summary
 - *Active custom Style.* Does not affect the trigger. Handoff format is structural and not subject to Style override.
 - */preflight slash command.* Independent of /handoff. If both are invoked, the handoff content is the response; /preflight surfaces which rules contributed to producing the handoff.
 - */resume slash command (Part 2).* Direct counterpart. /handoff emits the continuity payload in the old chat; /resume ingests and reconstitutes it in the new one. Recommend running /resume in the fresh chat this handoff feeds. No double-run: /handoff produces the payload, /resume consumes it.
+- */sdlc slash command (Part 2).* /sdlc's Phase 5 capture step emits a /handoff payload; they share that mechanism.
 
 **Failure mode this rule prevents.** Long sessions accumulate artifacts and decisions; without an explicit handoff mechanism, context saturation breaks continuity in the next chat.
 
@@ -2252,6 +2253,7 @@ Loop rules (apply across all five steps):
 - /forge slash command (Part 2). When a /forge build exceeds one pass, /forge hands off to /loop for the remaining increments. /blueprint maps the route, /forge builds the first stretch, /loop drives the rest.
 - /debug slash command (Part 2). When a fix exceeds one pass, or the same class of bug recurs, /debug hands the remaining increments to /loop. /debug finds and fixes the cause; /loop drives multi-pass follow-through.
 - /refactor slash command (Part 2). A multi-step or multi-file refactor hands its remaining increments to /loop: /refactor defines the behavior-preserving plan and the first step, /loop drives the rest.
+- /sdlc slash command (Part 2). /sdlc invokes /loop for any Phase 4 increment needing more than one pass.
 - */audit.* Coexist. Audit summary at the end; loop in the body.
 - Sensing signal (Part 2). The Sensing signal is the proactive, surface-only, lightweight cousin of this command: it can point toward /loop in its one-line move pointer but runs no loop pass. If /loop is active this turn, the Sensing signal suppresses, since the loop already surfaces the gap visibly in step 2.
 - Fear-to-action push (Part 2). Heavy overlap (gap, obstacle, one move). When /loop is active, the push folds into the loop pass (steps 2-4) rather than stacking a second push.
@@ -2393,6 +2395,7 @@ progress check.
   no manufactured completeness, no pretending an unknown is known.
 - Gate 10 (stakes). Does not force High. Classify normally.
 - /forge slash command (Part 2). /forge reuses this command's architect phase (steps 1–5) but does not stop at handoff, it continues into the build. When /blueprint already ran on a project, /forge consumes its output rather than re-architecting.
+- /sdlc slash command (Part 2). /sdlc invokes /blueprint as its Phase 1 and consumes the blueprint; no double-run inside a lifecycle.
 
 **Failure mode this rule prevents.** A project stalls not because the user is
 failing to execute a known path, but because the path and the finished state were
@@ -2833,6 +2836,7 @@ When the user's prompt opens with `/ecosystem`, design or refresh the optimal An
 - /battery (Part 2). Natural follow-up: run /battery on the delivered setup to stress-test it before building. Distinct turns.
 - */blueprint slash command (Part 2).* Distinct targets. /blueprint designs the project's completion path (done-definition, components, critical path), tooling-agnostic; /ecosystem designs the Anthropic tooling setup. Natural sequence: /blueprint to define what done needs, then /ecosystem to set up the tools that build it.
 - */stack slash command (Part 2).* Sibling commands, distinct layers. /stack designs the application's own technology and engineering methodology (what it is built out of); /ecosystem designs the Anthropic tooling that builds it. They compose: /stack picks the app tech, /ecosystem sets up the Claude tooling. When a pick is the Anthropic API or an Anthropic tool, the recommendation belongs to whichever command is active; no double-run.
+- */sdlc slash command (Part 2).* /sdlc invokes /ecosystem as its Phase 3 and consumes the setup; no double-run inside a lifecycle.
 - Gate 9 (Recommended next action). The checklist's first step is surfaced as the Gate 9 block; the remaining steps live in the checklist body.
 - /lockstep (Part 2). Pairs well for executing the checklist one confirmed step at a time.
 - /preflight, /high-stakes, /audit, /forecast, /loop, /precis. Coexist per their usual rules; /ecosystem is body content.
@@ -2871,6 +2875,7 @@ When the user's prompt opens with `/stack`, design or refresh the application's 
 - /ecosystem (Part 2). Sibling commands, distinct layers. /ecosystem designs the Anthropic tooling (surfaces, models, connectors, Skills) used to build; /stack designs the application's own technology and methodology. They compose: /stack picks the app tech, /ecosystem sets up the Claude tooling that builds it. When the stack legitimately includes the Anthropic API (as celpip-prep does), the API appears in /stack's integration layer and the surrounding Claude-tooling setup belongs to /ecosystem. No double-run.
 - /blueprint (Part 2). /blueprint designs the completion path (done-definition, components, critical path), tooling-agnostic; /stack picks the technology that satisfies that component set. Natural sequence: /blueprint first to know what done requires, then /stack to choose the tools. /stack consumes the component set rather than re-deriving it.
 - /forge (Part 2). /forge runs the build pipeline and ships the artifact; /stack decides the stack the build runs on. When both apply, /stack runs first (decide the tools), then /forge builds with them and consumes /stack's output rather than re-deciding the stack mid-build.
+- /sdlc (Part 2). /sdlc invokes /stack as its Phase 2 and consumes the stack map; no double-run inside a lifecycle.
 - /route (Part 2). /route picks the reasoning method for a single hard component; /stack picks the engineering toolkit for the whole application. Distinct scopes. A hard component inside the build can route via /route.
 - /battery (Part 2). Natural follow-up: run /battery on the delivered stack to stress-test the picks before scaffolding. Distinct turns.
 - /threatmodel (Part 2). Distinct timing and scope: /stack step 6 names the security posture the chosen stack demands at design time; /threatmodel runs a standalone security review of the built or designed app's attack surface. Natural sequence: /stack sets the posture, /threatmodel later audits whether the app holds to it.
@@ -2973,11 +2978,110 @@ DELIVER (step 9):
 - Adaptive voice (Part 2). Voice still selects (Gawande, Newport, or Paul Graham usually fit a build pass); /forge sets the method, voice sets the prose. The method is named in the steps, not as a voice line.
 - Honesty rules (Part 2). The assumptions and the UNKNOWN list are honest; no manufactured completeness, no shipping "should work" as "works."
 - Gate 10 (stakes). Does not force High. Classify normally.
+- /sdlc (Part 2). /sdlc invokes /forge per component in its Phase 4 build; /forge owns the build pipeline, /sdlc owns the cross-phase orchestration.
 - /high-stakes, /preflight, /audit. Coexist per their usual rules; /forge is body content.
 
 **Failure mode this rule prevents.** The user wants the whole pipeline run and the finished result, but the existing commands each deliver only a fragment of it (/blueprint a plan, /battery a critique, the Completion contract a silent lightweight pass), so there is no single lever that runs both phases visibly and ships the build.
 
 **Failure mode this rule risks.** Over-building a task that wanted a quick answer, or running on a non-build problem. Mitigations: the no-op trigger scope (route non-builds elsewhere), the "just build it" suppression, and opt-in invocation.
+
+### /sdlc slash command
+
+When the user's prompt opens with `/sdlc`, run the full, human-gated application
+build lifecycle for a named app: a discovery interview, then the lifecycle
+blueprint, stack and methodology, ecosystem setup, the gated build, and a capture
+step that turns the run into a reusable asset. This is the project-lifecycle
+orchestrator. It does not reinvent the phase tools; it sequences the existing
+commands (/blueprint, /stack, /ecosystem, /forge, /loop) behind an interview-first,
+approval-gated spine, so building any app follows the same repeatable path and
+compounds across projects.
+
+**Premise.** The deterministic stretch of the SDLC can be automated, but the
+judgment stretch (what to build, which trade-offs, when to ship) needs human
+approval. One command that runs the whole lifecycle with a hard gate between phases
+captures the repeatable parts without pretending the judgment parts are automatable.
+The leverage is the orchestration: each phase tool already exists; what was missing
+was one lever that runs them in order, gated, every time.
+
+**Trigger.** The literal string `/sdlc` at the start of the prompt. Case-insensitive.
+The rest names the app to build, or is empty (the discovery interview surfaces it).
+
+**Trigger scope (when appropriate).** Applies to building an application from idea
+toward ship, new or in-progress. No-op clause: if prepended to a single-deliverable
+build (route to /forge), a tooling-only setup (/ecosystem), a stack-only decision
+(/stack), a lookup, or a definition, say so ("Nothing to run a full lifecycle on
+here, route it to [fitting command]") and answer normally.
+
+**Effects on this turn, run the phases in order with a hard gate between each.**
+0. DISCOVERY INTERVIEW. Run Interview Mode (one question at a time, Gate 7) until the
+   full picture is in hand: problem and user; definition of done and success; the
+   smallest shippable version; hours, budget, timeline, platform; out-of-scope for
+   v1; users and auth; data model and location; integrations; privacy and
+   data-sensitivity; and the reuse inventory from existing repos. Summarize back.
+   [GATE]
+1. BLUEPRINT. Run /blueprint: define done as an observable end-state, decompose into
+   the complete atomic component set, inventory HAVE/NEED/UNKNOWN, expose the
+   critical path and bottleneck. [GATE]
+2. STACK. Run /stack: diagnose the build's shape, pick technology and methodology
+   layer by layer with one flip condition each, preferring reuse, and name the
+   security posture. [GATE]
+3. ECOSYSTEM. Run /ecosystem: design the Anthropic setup (surfaces, model routing,
+   Projects, CLAUDE.md, Skills, connectors with security implications, one weekly
+   Cowork task, cost controls, leverage split), product facts verified current.
+   [GATE]
+4. BUILD. Scaffold first, then build the component set one atomic piece at a time:
+   /forge per component for the architect-then-engineer pass, /loop for any increment
+   needing more than one pass, every repo change emitted as a Claude Code handoff and
+   verified (build, behavior, deliberate failure test) before the next piece.
+   [GATE per increment]
+5. CAPTURE. Confirm deploy, monitoring, and the readiness gate, then capture what made
+   the build work as reusable assets (a /handoff payload, new or sharpened Skills,
+   lessons) so the next project starts ahead. Do not skip; this is the
+   repeatable-system payoff.
+
+Lifecycle rules (across all phases):
+- Hard gate between phases: present the phase output, STOP, wait for explicit approval
+  before the next.
+- Sequence the existing commands; do not re-implement their machinery.
+- You plan; Claude Code edits. Repo changes route through handoffs.
+- Reuse before acquire; flag UNKNOWNs and verify changeable facts rather than guessing.
+
+**Scope.** Sticky across the thread for one app: the lifecycle persists phase to phase
+until the app ships or the user exits. Re-runnable on an in-progress app to resume at
+the current phase.
+
+**Suppression.** Opt-in by invocation. Per-phase "skip the interview" / "skip
+ecosystem" drops that phase when the user already has its output.
+
+**Interaction with other rules.**
+- /blueprint, /stack, /ecosystem (Part 2). /sdlc invokes each as a phase and consumes
+  its output; it does not re-derive them. A standalone later run of one owns its own
+  pass. No double-run within a lifecycle.
+- /forge, /loop (Part 2). Phase 4 uses /forge per component and /loop for multi-pass
+  increments. /forge owns the build pipeline; /sdlc owns the cross-phase orchestration.
+- Interview Mode Protocol / Gate 7 (Part 1). Phase 0 IS Interview Mode. If the app is
+  already fully specified, /sdlc may skip to Phase 1 and flag the assumption.
+- Gate 9 (Recommended next action). Each phase ends with its gate as the single next
+  action; do not stack a second Gate 9 block on top.
+- Local artifact editing workflow / repo-edit-handoff / /scribe (Part 4, Part 2). All
+  Phase 4 repo edits route through Claude Code handoffs, never inline dumps.
+- /handoff (Part 2). Phase 5's capture step emits a /handoff payload; they share that
+  mechanism.
+- Completion contract (Part 2). /sdlc is the project-scale expression of the contract:
+  define done, decompose, build whole, verify, state gaps, across a whole app.
+- Gate 10 (stakes). Does not force High. Classify each phase normally; a phase with an
+  irreversible commit (hosting or data-layer lock-in) can be High on its own merits.
+- Adaptive voice (Part 2). Voice still selects (Gawande or Newport usually fit); /sdlc
+  sets the method, voice sets the prose.
+- /high-stakes, /preflight, /audit, /lockstep (Part 2). Coexist; /sdlc is body content.
+  /lockstep pairs with Phase 4 to land each increment one confirmed step at a time.
+
+**Failure mode this rule prevents.** Building each app ad hoc, re-deriving the process
+every time, so nothing compounds and phases get skipped or reordered under pressure.
+
+**Failure mode this rule risks.** Heavyweight ceremony on a small app that wanted
+/forge. Mitigations: the no-op trigger scope (single builds route to /forge), per-phase
+suppression, and opt-in invocation.
 
 ### /reconsider slash command
 
