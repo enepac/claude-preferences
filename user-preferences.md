@@ -2398,6 +2398,7 @@ progress check.
 - Gate 10 (stakes). Does not force High. Classify normally.
 - /forge slash command (Part 2). /forge reuses this command's architect phase (steps 1–5) but does not stop at handoff, it continues into the build. When /blueprint already ran on a project, /forge consumes its output rather than re-architecting.
 - /sdlc slash command (Part 2). /sdlc invokes /blueprint as its Phase 1 and consumes the blueprint; no double-run inside a lifecycle.
+- /preview (Part 2). /preview reuses this command's planning and adds a clickable mockup approval gate for visual components; run /preview when the component has a screen to see, /blueprint alone when it does not.
 
 **Failure mode this rule prevents.** A project stalls not because the user is
 failing to execute a known path, but because the path and the finished state were
@@ -2409,6 +2410,53 @@ small task that needed a direct answer, or a blueprint so exhaustive it becomes
 its own avoidance of execution. Mitigations: the no-op trigger scope,
 component-level (not task-level) decomposition, and the hard handoff to /loop for
 actual execution.
+
+### /preview slash command
+
+When the user's prompt opens with `/preview`, produce a design-preview package for a user-facing component BEFORE any building: a short plan plus an interactive, offline HTML mockup of the screens, iterate cheaply on the mockup until approved, lock and sync the plan, then hand off to the build commands. This is the "see it before you build it" gate that sits between the text plan (/blueprint) and the build (/forge, /sdlc). It does not re-implement planning or building; it adds the visual-approval step they lack.
+
+**Premise.** Changing a clickable mockup is cheap; changing shipped code is expensive. Building a component, discovering the design was wrong, and revising the code in circles is the loop this prevents. A throwaway mockup gives agreed direction up front.
+
+**Trigger.** The literal string `/preview` at the start of the prompt. Case-insensitive. The rest names the component, screen, or flow to preview.
+
+**Trigger scope (when appropriate).** Applies to user-facing components with something to SEE: a screen, a flow, a UI, a layout. No-op / route clause: if the component is not visual (a backend endpoint, a data migration, a scoring rule, a script), say so and route to /blueprint for a text plan instead, since a mockup adds nothing. Trivial changes skip it.
+
+**Effects (run in order).**
+1. Scope check. Confirm there is a user-facing surface to mock up. If not, route to /blueprint and stop.
+2. Plan (reuse /blueprint). Define done as an observable end-state, list the screens and the user journey, inventory what is known vs open. Reuse /blueprint's machinery; do not re-derive it.
+3. Produce two artifacts:
+   a. A fillable plan document (done-definition, screens, user journey, design notes, acceptance checks, build order, open questions) as a file.
+   b. A standalone, offline, interactive HTML mockup of the screens with multi-screen navigation, matching the existing product's look, big readable text, plain labels, and all disclaimers preserved. Real only where free (e.g., browser read-aloud); never wired to real data.
+4. Iterate cheaply. Revise the MOCKUP in response to feedback, never shipped code, until the user approves. Each change keeps the plan in sync.
+5. Lock and sync. On approval, finalize the plan to match the mockup; the plan becomes the build spec.
+6. Hand off to build. Route to /forge (one component) or /sdlc (whole app) to build from the locked plan, one piece at a time with a real verify gate; or /battery first to stress-test the locked design.
+
+**Rules.**
+- Visual components only. Non-visual routes to /blueprint.
+- The mockup is throwaway and standalone (offline HTML). It is never wired to real data and never becomes a maintained artifact.
+- Cheap-to-change-early: revise the picture, not the code.
+- Plain language and big readable text in both artifacts; keep all disclaimers.
+- This planner chat produces the artifacts and handoffs; Claude Code builds.
+
+**Scope.** Sticky for one component until approved and handed off, then released. Re-runnable to re-preview a changed design.
+
+**Suppression.** Opt-in by invocation. Per-turn "plan only" or "no mockup" skips the visual artifact and produces just the plan (equivalent to /blueprint).
+
+**Interaction with other rules.**
+- /blueprint (Part 2). /preview reuses /blueprint's planning at step 2 and adds the visual layer; /blueprint owns the text plan, /preview owns the mockup. No double-run.
+- /forge, /sdlc (Part 2). The build targets after lock. /preview produces the spec; they build it. /preview never builds.
+- /stack, /ecosystem (Part 2). Orthogonal (technology and tooling, not visual design); they can run alongside.
+- /battery (Part 2). Natural follow-up: stress-test the locked design before building.
+- /verify (Part 2). After the build, /verify checks the result against the locked plan/mockup as the acceptance spec.
+- /loop (Part 2). Drives the build increments after handoff.
+- Completion contract (Part 2). The locked plan's done-definition feeds it.
+- Local artifact editing workflow / /scribe (Part 4, Part 2). The mockup and plan files, and any repo landing, route through Claude Code handoffs, not manual edits.
+- /plain and active Style (Part 2). Artifacts and prose follow plain-language and style rules.
+- Honesty rules, Gate 4, Gate 5 (Part 1, Part 2). The mockup is labelled a preview built on stated assumptions, not the finished product; feasibility claims are hedged.
+
+**Failure mode this rule prevents.** Building a component, finding the design wrong, and revising the code in circles with no agreed direction.
+
+**Failure mode this rule risks.** Over-ceremony: a mockup for a component that needed none. Mitigations: the visual-only scope, the "plan only" suppression, and opt-in invocation.
 
 ### /battery slash command
 
@@ -3019,6 +3067,7 @@ DELIVER (step 9):
 - Honesty rules (Part 2). The assumptions and the UNKNOWN list are honest; no manufactured completeness, no shipping "should work" as "works."
 - Gate 10 (stakes). Does not force High. Classify normally.
 - /sdlc (Part 2). /sdlc invokes /forge per component in its Phase 4 build; /forge owns the build pipeline, /sdlc owns the cross-phase orchestration.
+- /preview (Part 2). For visual components, /preview locks the design first; /forge then builds from the locked plan. /preview produces the spec, /forge consumes it.
 - /high-stakes, /preflight, /audit. Coexist per their usual rules; /forge is body content.
 
 **Failure mode this rule prevents.** The user wants the whole pipeline run and the finished result, but the existing commands each deliver only a fragment of it (/blueprint a plan, /battery a critique, the Completion contract a silent lightweight pass), so there is no single lever that runs both phases visibly and ships the build.
@@ -3108,6 +3157,8 @@ ecosystem" drops that phase when the user already has its output.
   pass. No double-run within a lifecycle.
 - /forge, /loop (Part 2). Phase 4 uses /forge per component and /loop for multi-pass
   increments. /forge owns the build pipeline; /sdlc owns the cross-phase orchestration.
+- /preview (Part 2). In Phase 4, a visual component can run /preview to lock its design
+  before /forge builds it.
 - Interview Mode Protocol / Gate 7 (Part 1). Phase 0 runs Interview Mode in full for
   a new project; for an existing project it self-sources current state from docs and
   code first, then runs Interview Mode only on the forward-looking gaps. One question
