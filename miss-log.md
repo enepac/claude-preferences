@@ -28,6 +28,7 @@ One row per miss in the log table below:
 ## How the loop closes
 - Single miss: diagnose, log the row, apply the adjustment immediately.
 - Pattern (3 or more of the same category, per the Part 3B threshold): trigger a structural fix to the responsible rule or spec, not just a point fix.
+- Recurrence: a new miss in a category that already received a structural fix is a recurrence, not a fresh single miss. The prior fix did not hold. Re-trigger escalation on the first recurrence (do not wait for three more), reopen and replace the failed fix via Part 3 / Part 3D rather than point-patching it again, and mark the category [REGRESSED] in the dashboard until the replacement fix is verified. Every recurrence feeds the recurrence-rate metric below.
 - Dashboard: the category tally below. Whichever category dominates is the stage to fix next. FORK-heavy means tighten the fork rule. INTENT-heavy means sharpen the architect phase.
 
 ## The log
@@ -40,12 +41,16 @@ One row per miss in the log table below:
 | 2026-06-14 | Correction-line em-dash persisted after point fix | BUILD | After the template fix, the prompt-correction line still reproduced the old em-dash form of the no-corrections message, so the point fix missed an instance | Fixing reproduced templates one at a time keeps missing instances; the prior "no further fix needed" call was premature | Structural fix: swept ALL em-dashes out of user-preferences.md in one pass and verified with grep, so no template can reproduce one. Third BUILD instance, three-strike structural fix applied |
 
 ## Category tally (the dashboard)
+Each non-zero category carries a fix-status bracket: [OPEN] = misses logged, below threshold, point-fixed only; [FIXED] = reached the three-strike threshold and received a structural fix; [REGRESSED] = a new miss landed after that structural fix (a recurrence; the fix did not hold). Zero-count categories carry no bracket.
+
 - TRIAGE: 0
 - INTENT: 0
 - FORK: 0
-- SCOPE: 1
-- ASSUMPTION: 1
-- BUILD: 3
+- SCOPE: 1 [OPEN]
+- ASSUMPTION: 1 [OPEN]
+- BUILD: 3 [FIXED]
 - STALE: 0
 
-Last updated: 2026-06-14
+Recurrence rate: 0 recurrences / 1 structural fix = 0%. (Post-fix misses divided by structural fixes applied. Tracks whether fixes hold; a rising rate means structural fixes are not sticking and the responsible rule or spec needs rework, not another point fix.)
+
+Last updated: 2026-06-23
