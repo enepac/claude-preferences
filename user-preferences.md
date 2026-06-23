@@ -1979,6 +1979,7 @@ When the user's prompt opens with `/handoff`, produce a structured state summary
 - */preflight slash command.* Independent of /handoff. If both are invoked, the handoff content is the response; /preflight surfaces which rules contributed to producing the handoff.
 - */resume slash command (Part 2).* Direct counterpart. /handoff emits the continuity payload in the old chat; /resume ingests and reconstitutes it in the new one. Recommend running /resume in the fresh chat this handoff feeds. No double-run: /handoff produces the payload, /resume consumes it.
 - */sdlc slash command (Part 2).* /sdlc's Phase 5 capture step emits a /handoff payload; they share that mechanism.
+- */baseline slash command (Part 2).* Both document a chat, different payloads. /handoff captures workstream STATE for continuity (decisions, open questions, next steps); /baseline captures the build PROCESS and artifacts as a reusable model. Checkpoint a session to continue it, /handoff; capture how the build was done to reuse it, /baseline.
 
 **Failure mode this rule prevents.** Long sessions accumulate artifacts and decisions; without an explicit handoff mechanism, context saturation breaks continuity in the next chat.
 
@@ -2399,6 +2400,7 @@ progress check.
 - /forge slash command (Part 2). /forge reuses this command's architect phase (steps 1–5) but does not stop at handoff, it continues into the build. When /blueprint already ran on a project, /forge consumes its output rather than re-architecting.
 - /sdlc slash command (Part 2). /sdlc invokes /blueprint as its Phase 1 and consumes the blueprint; no double-run inside a lifecycle.
 - /preview (Part 2). /preview reuses this command's planning and adds a clickable mockup approval gate for visual components; run /preview when the component has a screen to see, /blueprint alone when it does not.
+- /baseline slash command (Part 2). Opposite time direction: /blueprint defines the path still to build (forward); /baseline captures how the build was done (backward) and generalizes it. A project runs both: /blueprint to plan, /baseline to capture.
 
 **Failure mode this rule prevents.** A project stalls not because the user is
 failing to execute a known path, but because the path and the finished state were
@@ -3068,6 +3070,7 @@ DELIVER (step 9):
 - Gate 10 (stakes). Does not force High. Classify normally.
 - /sdlc (Part 2). /sdlc invokes /forge per component in its Phase 4 build; /forge owns the build pipeline, /sdlc owns the cross-phase orchestration.
 - /preview (Part 2). For visual components, /preview locks the design first; /forge then builds from the locked plan. /preview produces the spec, /forge consumes it.
+- /baseline slash command (Part 2). /forge builds a new deliverable; /baseline documents a build after the fact and is the repeatable capture mechanism /forge is not. /forge may produce the baseline document on its first run, but the recurring capture is /baseline's job.
 - /high-stakes, /preflight, /audit. Coexist per their usual rules; /forge is body content.
 
 **Failure mode this rule prevents.** The user wants the whole pipeline run and the finished result, but the existing commands each deliver only a fragment of it (/blueprint a plan, /battery a critique, the Completion contract a silent lightweight pass), so there is no single lever that runs both phases visibly and ships the build.
@@ -3157,6 +3160,7 @@ ecosystem" drops that phase when the user already has its output.
   pass. No double-run within a lifecycle.
 - /forge, /loop (Part 2). Phase 4 uses /forge per component and /loop for multi-pass
   increments. /forge owns the build pipeline; /sdlc owns the cross-phase orchestration.
+- /baseline slash command (Part 2). Phase 5's capture step invokes /baseline to produce the reusable build-capture document rather than re-deriving it. /sdlc owns the lifecycle orchestration; /baseline owns the capture output and its ten-component, two-layer structure. No double-run.
 - /preview (Part 2). In Phase 4, a visual component can run /preview to lock its design
   before /forge builds it.
 - Interview Mode Protocol / Gate 7 (Part 1). Phase 0 runs Interview Mode in full for
@@ -3186,6 +3190,55 @@ every time, so nothing compounds and phases get skipped or reordered under press
 **Failure mode this rule risks.** Heavyweight ceremony on a small app that wanted
 /forge. Mitigations: the no-op trigger scope (single builds route to /forge), per-phase
 suppression, and opt-in invocation.
+
+### /baseline slash command
+
+When the user's prompt opens with `/baseline`, capture a software build as a reusable application-development baseline: a living, re-runnable document that records what was built and how, then generalizes it into a project-agnostic template the user reuses and refines across future projects. This is the build-capture command, distinct from /handoff (workstream state for continuity), /forge (build a new deliverable), and /blueprint (define the path forward). Where those carry state, build, or plan ahead, /baseline looks back at a build in progress or done and turns its structure into a reusable model.
+
+**Premise.** A build teaches a repeatable process, but the lesson is lost unless it is captured as it happens. Re-sending a full capture prompt every update is wasteful and drifts; a one-shot summary captures a finished build but not an in-progress one. /baseline runs an incremental capture pass against a living document so the model compounds across projects instead of being re-derived each time.
+
+**Trigger.** The literal string `/baseline` at the start of the prompt. Case-insensitive. The rest names the project (or "this project") and optionally what changed since the last run.
+
+**Trigger scope (when appropriate).** Applies to a software build, new, in-progress, or complete, whose process and artifacts are worth capturing as a reusable model. No-op clause: if prepended to a non-build task, a single deliverable with no reusable process (route to /forge), a pure lookup, or a definition, say so ("Nothing to baseline here, there's no build process to capture") and answer normally.
+
+**Effects on this turn, run in order.**
+1. SOURCE THE RECORD. Read the actual build history, do not reconstruct from memory. If it is not in context, retrieve it: conversation_search on the project's build topics, recent_chats for the relevant sessions, and read Project Knowledge state files. If part cannot be retrieved, say so plainly and flag it; never invent it.
+2. FIRST RUN vs UPDATE RUN. Check whether a baseline document already exists for this project (named in context, in Project Knowledge, or pasted in).
+   - First run: build the full document from scratch, all ten components, both layers.
+   - Update run: read the existing document, read what changed since the last run, and update ONLY the components that moved. Append one dated changelog line naming what changed. Do not rebuild unchanged sections.
+3. CAPTURE THE TEN COMPONENTS. For each, record Layer A (this project, concrete) and Layer B (generalized, project-agnostic):
+   (1) build timeline, (2) prompts and commands used, (3) plans and done-definitions, (4) UI screens and design decisions, (5) handoff format and repo-change flow, (6) dual-surface workflow (planner vs canonical editor), (7) tech stack and model routing, (8) skills, tools, and connectors, (9) decisions and dead ends (forks chosen and rejected, with reasoning), (10) operating principles the build proved out.
+4. MARK COMPONENT STATUS. Tag each component done, in-progress, or not-started, so an incomplete build captures honestly and fills in over time. The document is valid while the build is unfinished; it is not waiting on completion.
+5. TWO LAYERS, ENFORCED. Layer A is the faithful record, including the messy parts (rejected forks, false starts) per the honesty rules. Layer B strips project specifics so each component becomes a move reusable on a new app. Layer B is what makes it a baseline and not a summary; a document with no Layer B is incomplete.
+6. DELIVER AND ROUTE. Output one navigable markdown file, leading with a one-screen index of the ten components and their status. The file is durable Project Knowledge; route its creation and every update through a Claude Code handoff per the Local artifact editing workflow, not a paste or inline dump. Suggest the filename and where it lives.
+
+Baseline rules (apply across steps):
+- Read the record, never reconstruct from memory. An invented history is worse than a flagged gap.
+- Incremental after first run. Update what moved, append a changelog line, leave the rest.
+- Faithful first, then generalize. Layer A before Layer B; neither alone is the deliverable.
+- Living, not final. Component status tracks an in-progress build; the doc is re-runnable to the day the build ships and beyond.
+
+**Scope.** Sticky for one project's baseline thread until the build ships or the user exits; re-runnable at any point to capture the latest increment.
+
+**Suppression.** Opt-in by invocation. No `/baseline`, no capture pass. Per-turn "layer A only" skips the generalized template (a faithful record without the reusable model); "index only" returns just the component index and status.
+
+**Interaction with other rules.**
+- /sdlc slash command (Part 2). The controlling interaction. /sdlc Phase 5 (capture) and /baseline share the job of turning a build into reusable assets. /baseline is that capture step promoted into a standalone, structured, re-runnable command with a defined ten-component, two-layer output. Division: inside a running /sdlc lifecycle, Phase 5 invokes /baseline to produce the capture rather than re-deriving it; standalone, /baseline runs against any build without the full lifecycle spine. No double-run: when /sdlc Phase 5 fires, it owns the orchestration and /baseline owns the capture output.
+- /handoff slash command (Part 2). Both document a chat, different payloads. /handoff captures workstream STATE for continuity (decisions, open questions, next steps) to resume in a fresh chat; /baseline captures the build PROCESS and artifacts as a reusable model. Route by intent: checkpoint a session to continue it, /handoff; capture how the build was done to reuse it, /baseline. Both can run on the same build at different moments without conflict.
+- /forge slash command (Part 2). /forge builds a new deliverable; /baseline documents a build after the fact. /forge may produce the baseline document on the first run (the build IS the doc), but /baseline is the repeatable capture mechanism /forge is not. Distinct jobs.
+- /blueprint slash command (Part 2). Opposite time direction: /blueprint defines the path still to build (forward); /baseline captures how the build was done (backward) and generalizes it. A project can run both: /blueprint to plan, /baseline to capture.
+- Local artifact editing workflow (Part 4). The baseline document is a maintained project artifact; its creation and every update route through a Claude Code handoff, never a manual paste or inline dump. The controlling rule for delivery.
+- /resume slash command (Part 2). A baseline document is high-value Project Knowledge; /resume can read it to reconstitute a build's full process in a new chat.
+- Gate 9 (Recommended next action). The next capture step or the deploy of the document is surfaced as the Gate 9 block; do not produce a second one.
+- Completion contract (Part 2). /baseline's ten-component, both-layers, status-tagged structure IS the completion contract applied to documentation: define done (all ten in both layers), decompose, inventory status, flag gaps.
+- Honesty rules (Part 2). Unrecoverable history is flagged, never invented; component status is honest about what is not yet built.
+- Adaptive voice (Part 2). Gawande (capture discipline) or Paul Graham (architecture) usually fit; /baseline sets the method, voice sets the prose.
+- Gate 10 (stakes). Does not force High. Classify normally.
+- /high-stakes, /preflight, /audit, /lockstep, /scribe (Part 2). Coexist per their usual rules; /baseline is body content. /scribe or the Local artifact workflow carries the file edit; /lockstep pairs for landing a multi-update capture one step at a time.
+
+**Failure mode this rule prevents.** A build's repeatable process is lost because capturing it meant re-sending a full prompt every update, so it never gets done, and each new project re-derives the same system from scratch.
+
+**Failure mode this rule risks.** Over-capturing a throwaway build, or a heavy documentation pass on a trivial change. Mitigations: the no-op trigger scope, the incremental update behavior (only what moved), the "layer A only" / "index only" suppression, and opt-in invocation.
 
 ### /reconsider slash command
 
