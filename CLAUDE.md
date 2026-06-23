@@ -12,7 +12,7 @@ This folder holds the canonical version of my Claude.ai User Preferences (`user-
 4. We git commit with a descriptive message naming the rule and the change.
 5. I review the diff.
 6. When ready, I copy the full file contents and paste into claude.ai Settings → Profile → User Preferences, then save.
-7. New chats opened after the save load the updated preferences. Active chats are unaffected.
+7. Chats reflect the updated preferences on their next user message after the save: active chats refresh mid-chat, not only at chat start (corrected lifecycle model, lesson-3-anomaly.md). A fresh chat is still the cleanest way to confirm a deploy and avoid context saturation, but is no longer required for the change to take effect.
 
 ## Rules that apply
 
