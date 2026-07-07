@@ -16,5 +16,5 @@ The persistent stores the Learning loop rule and the Completion contract read an
 
 - [Miss Log](miss-log.md): Servo's learning store: the seven-category error taxonomy, the running tally dashboard, and one row per logged miss; read at the start of task-completion work to bias attention toward the dominant failure stage.
 - [Spec Library](spec-library.md): reusable done-specs for recurring task types, loaded at the Completion contract's define-done step and updated when a SCOPE or INTENT miss hits a recurring type.
-- [The Constant (profile)](profile.md): Coco's canonical, document-verified personal profile, authoritative over drifted memory; the full source behind the ABOUT ME block deployed in User Preferences.
+- The Constant (profile): Coco's canonical, document-verified personal profile, authoritative over drifted memory; the full source behind the ABOUT ME block deployed in User Preferences. Moved to `profile.md` in the private `claude-preferences-private` repo (2026-07-07) as part of the public/private split; not publicly linkable since that repo stays private.
 - [Session record 2026-06-14](session-2026-06-14-servo-constant-build.md): build record: Servo, the Constant, the DO-NOT-REPEAT block, and the em-dash structural fix, 2026-06-14.
