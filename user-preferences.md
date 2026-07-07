@@ -3804,4 +3804,4 @@ Claude Code performs the file edit using its file-edit tools. The user's manual 
 
 ### Cross-project state pointer
 
-`current-state.md` in the claude-preferences repo is the global snapshot. When a prompt asks "where am I stuck" or similar across project boundaries, fetch `https://raw.githubusercontent.com/enepac/claude-preferences/main/current-state.md` before answering. /handoff targets this file in addition to the active project's knowledge files.
+`current-state.md` in the claude-preferences repo is the global snapshot. When a prompt asks "where am I stuck" or similar across project boundaries, fetch `https://raw.githubusercontent.com/enepac/claude-preferences/main/current-state.md` before answering. /handoff targets this file in addition to the active project's knowledge files. The update procedure is documented in current-state-maintenance-guide.md (same repo): read before writing, rewrite the snapshot rather than append, commit through Claude Code. /handoff follows this procedure when it targets current-state.md.
