@@ -39,6 +39,7 @@ One row per miss in the log table below:
 | 2026-06-14 | Profile vs memory blend | SCOPE | Deployed profile supplied correct facts, but stale memory leaked "founder" and "speaking-prep product" into the output; the profile did not override drifted memory | Profile's done-definition omitted a precedence clause making it authoritative over memory | Added a precedence clause to the ABOUT ME block and profile.md so the verified profile wins on conflict; mitigates, does not guarantee, memory leak. Single instance, no structural fix (SCOPE threshold is 3) |
 | 2026-06-14 | No-em-dash rule slip (fresh-chat test) | BUILD | A fresh-chat reply used two em-dashes, violating the global no-em-dash rule; the Punctuation rule did not fire | Existing rule present but not firing reliably across chats | Promoted em-dashes to the DO-NOT-REPEAT block as a blunt backstop. Second BUILD instance; one more hits the three-strike structural threshold. Confirmed: DO-NOT-REPEAT entry fixed free-prose em-dashes (clean James Clear paragraph on retest). Residual traced to reproduced format templates (voice line, correction line, title examples), fixed by de-em-dashing those templates. |
 | 2026-06-14 | Correction-line em-dash persisted after point fix | BUILD | After the template fix, the prompt-correction line still reproduced the old em-dash form of the no-corrections message, so the point fix missed an instance | Fixing reproduced templates one at a time keeps missing instances; the prior "no further fix needed" call was premature | Structural fix: swept ALL em-dashes out of user-preferences.md in one pass and verified with grep, so no template can reproduce one. Third BUILD instance, three-strike structural fix applied |
+| 2026-07-06 | Repo-edit handoff block delivery | BUILD | Handoff block opened with a User-Preferences slash command (/refactor) as if it were a Claude Code CLI command; Claude Code returned "Unknown command" and treated the rest as args | Handoff block template used a Claude Code slash-command prefix, a convention from interactive CLI usage, instead of the plain-instruction convention required for User-Preferences repo-edit handoffs | Fix: repo-edit-handoff blocks never carry a slash-command prefix; plain instructions only. Fourth BUILD instance, and BUILD already carries a three-strike structural fix from 2026-06-14 — this is a recurrence, not a fresh single miss |
 
 ## Category tally (the dashboard)
 Each non-zero category carries a fix-status bracket: [OPEN] = misses logged, below threshold, point-fixed only; [FIXED] = reached the three-strike threshold and received a structural fix; [REGRESSED] = a new miss landed after that structural fix (a recurrence; the fix did not hold). Zero-count categories carry no bracket.
@@ -48,9 +49,9 @@ Each non-zero category carries a fix-status bracket: [OPEN] = misses logged, bel
 - FORK: 0
 - SCOPE: 1 [OPEN]
 - ASSUMPTION: 1 [OPEN]
-- BUILD: 3 [FIXED]
+- BUILD: 4 [REGRESSED]
 - STALE: 0
 
-Recurrence rate: 0 recurrences / 1 structural fix = 0%. (Post-fix misses divided by structural fixes applied. Tracks whether fixes hold; a rising rate means structural fixes are not sticking and the responsible rule or spec needs rework, not another point fix.)
+Recurrence rate: 1 recurrence / 1 structural fix = 100%. (Post-fix misses divided by structural fixes applied. Tracks whether fixes hold; a rising rate means structural fixes are not sticking and the responsible rule or spec needs rework, not another point fix.)
 
-Last updated: 2026-06-23
+Last updated: 2026-07-06
