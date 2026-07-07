@@ -3809,3 +3809,7 @@ Claude Code performs the file edit using its file-edit tools. The user's manual 
 - *Canonical content vs. staged content*: Canonical content lives in local files. Any content staged elsewhere (Drive, etc.) is non-canonical until the user promotes it via the project UI.
 - */scribe slash command (Part 2).* /scribe is the on-demand, any-text-file invocation of this workflow's handoff mechanism. This workflow stays the always-on rule for canonical artifacts; /scribe extends the same handoff format to general text files when invoked. On canonical artifacts, this workflow's discipline governs and /scribe only invokes the handoff.
 - *Learning loop (Part 2).* Miss-log appends route through this workflow's Claude Code handoff (commit and push so the connector re-syncs), never a manual hand-edit.
+
+### Cross-project state pointer
+
+`current-state.md` in the claude-preferences repo is the global snapshot. When a prompt asks "where am I stuck" or similar across project boundaries, fetch `https://raw.githubusercontent.com/enepac/claude-preferences/main/current-state.md` before answering. /handoff targets this file in addition to the active project's knowledge files.
