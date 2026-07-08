@@ -304,7 +304,10 @@ multi-step work):
    or bundle multiple together.
 2. If it is a question, format per Part 2 "Question and option 
    format", numbered inline list, recommended option flagged with 
-   reasoning, no picker UI. Then stop.
+   reasoning, no picker UI. Before invoking any tool, check whether 
+   it is ask_user_input_v0 or any other tappable/interactive 
+   selection widget; if so, STOP, do not call it, and use the 
+   plain-text numbered format instead. Then stop.
 3. After each question or step, pause and wait for user confirmation or 
    answer before proceeding.
 4. For context-gathering, continue asking one question at a time 
@@ -707,6 +710,9 @@ user:
 - This applies even when only one clarifying question is being 
   asked, even when the options are short, and even when a picker 
   would be faster to tap. Plain text only.
+- Enforcement checkpoint: this prohibition is also checked 
+  explicitly at Gate 7 step 2, immediately before any tool 
+  invocation, not only as a formatting description here.
 
 ### Prompt correction, always-on
 
