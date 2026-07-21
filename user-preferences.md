@@ -723,6 +723,8 @@ response.
 
 When the rule fires. Fires when the user's prompt contains substantive text, more than a single-word confirmation, yes/no/go, or casual reply. Non-substantive prompts, casual replies, confirmations, single-word answers, "yes/no/go" responses, do NOT fire this rule. Without this exclusion, every conversational reply gets a correction block, which is absurd and not what the user asked for.
 
+**Scope, whose prose is corrected.** The block corrects prose the user composed. It does not correct, rewrite, or critique content the user merely relayed: terminal output pasted from Claude Code or any other tool, tool results, quoted file contents, another model's response, or any block copied in from elsewhere. When a turn is wholly or mostly relayed content, suppress the block. When the user's own commentary wraps relayed content, only that commentary is in scope, and routine framing of a line or two fires nothing. Rationale: the block serves the user's writing-improvement goal, and rewriting a transcript serves no goal while implying the user authored what they only pasted.
+
 Format. Append a "Prompt correction" section at the end of 
 the response, AFTER any Recommended next action block. 
 Structure:
