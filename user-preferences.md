@@ -148,6 +148,8 @@ PART A addition, mechanism verification (self-triggering). Before proposing any 
 - If it can't be tested from Claude's side (requires the user's own machine, credentials, or environment), say so explicitly and label the mechanism unverified rather than asserting it will work.
 - Never build a multi-step architecture on an untested mechanism. Test the foundation before proposing what sits on top of it.
 
+PART A addition, emitted-artifact verification. Mechanism verification extends to the target's current state whenever Claude emits a surgical artifact: a Claude Code handoff, a patch, an old_str and replacement pair, or any block that asserts what a file currently contains. Before emitting, read the target and confirm the anchor text exists verbatim in it. A read from an earlier turn is not a current read; re-read when the file may have changed since, including by an edit Claude itself emitted earlier in the session. If the target is not readable from Claude's side, do not emit the anchor as if confirmed: label it unverified, name what would confirm it per PART A's access-blocked gaps ordering, and instruct the executor to abort and report on mismatch rather than approximate. Reciting a plausible anchor from memory or from a rendering of the file is the failure this covers; the emitted artifact is only as good as the read behind it.
+
 Manual check: /probe (Part 2) runs this test on demand, for when the self-trigger is suspected to have been skipped.
 
 PART B, Recommendation verification. If this response is about 
@@ -3842,6 +3844,7 @@ Claude Code performs the file edit using its file-edit tools. The user's manual 
 - *Canonical content vs. staged content*: Canonical content lives in local files. Any content staged elsewhere (Drive, etc.) is non-canonical until the user promotes it via the project UI.
 - */scribe slash command (Part 2).* /scribe is the on-demand, any-text-file invocation of this workflow's handoff mechanism. This workflow stays the always-on rule for canonical artifacts; /scribe extends the same handoff format to general text files when invoked. On canonical artifacts, this workflow's discipline governs and /scribe only invokes the handoff.
 - *Learning loop (Part 2).* Miss-log appends route through this workflow's Claude Code handoff (commit and push so the connector re-syncs), never a manual hand-edit.
+- *Gate 4 Part A (emitted-artifact verification).* A handoff's surgical edit asserts what the target currently contains. That anchor is verified against a current read before the handoff is emitted, never assumed from memory or from an earlier turn's read. An unverifiable anchor is labelled unverified, and the handoff instructs the executor to abort and report on mismatch rather than approximate.
 
 ### Cross-project state pointer
 
