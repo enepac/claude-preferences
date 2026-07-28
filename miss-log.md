@@ -41,6 +41,7 @@ One row per miss in the log table below:
 | 2026-06-14 | Correction-line em-dash persisted after point fix | BUILD | After the template fix, the prompt-correction line still reproduced the old em-dash form of the no-corrections message, so the point fix missed an instance | Fixing reproduced templates one at a time keeps missing instances; the prior "no further fix needed" call was premature | Structural fix: swept ALL em-dashes out of user-preferences.md in one pass and verified with grep, so no template can reproduce one. Third BUILD instance, three-strike structural fix applied |
 | 2026-07-06 | Repo-edit handoff block delivery | BUILD | Handoff block opened with a User-Preferences slash command (/refactor) as if it were a Claude Code CLI command; Claude Code returned "Unknown command" and treated the rest as args | Handoff block template used a Claude Code slash-command prefix, a convention from interactive CLI usage, instead of the plain-instruction convention required for User-Preferences repo-edit handoffs | Fix: repo-edit-handoff blocks never carry a slash-command prefix; plain instructions only. Fourth BUILD instance, and BUILD already carries a three-strike structural fix from 2026-06-14 — this is a recurrence, not a fresh single miss |
 | 2026-07-07 | Cross-project fetch pointer mechanism | ASSUMPTION | Proposed raw-fetch pointer mechanism across multiple turns without testing Claude's own fetch tool against it first; found broken only after repo/PII/path work was built on top of it | Recommended a mechanism Claude itself controls without testing it in the turn it was proposed | Structural fix applied this commit: Gate 4 Part A mechanism-verification addition (self-triggering, tests Claude-controlled mechanisms before they are recommended), a DO-NOT-REPEAT entry, and the /probe slash command for on-demand re-checks. Second ASSUMPTION instance, below the three-strike threshold; status OPEN pending verification the fix holds |
+| 2026-07-28 | BOS GitHub connector capability claim | ASSUMPTION | Asserted "no GitHub connector available" for the BOS project after checking only the callable tool list; the project had a GitHub source attached under Context, syncing 18 repo files into project knowledge, which the response had been reading from throughout | Two distinct mechanisms (MCP tools vs Context source) were collapsed into one check, so a negative claim was made beyond what was actually tested | Corrected in-turn; withdrew the public-repo workaround built on the false premise. Scope the negative claim to what was actually tested: report "no GitHub tools in my tool list," never "no connector available," since project Context configuration is not observable from the tool list. Third ASSUMPTION instance (three-strike threshold reached) and it lands after the 2026-07-07 structural fix, so it is also a recurrence; category marked [REGRESSED], structural fix still owed |
 
 ## Category tally (the dashboard)
 Each non-zero category carries a fix-status bracket: [OPEN] = misses logged, below threshold, point-fixed only; [FIXED] = reached the three-strike threshold and received a structural fix; [REGRESSED] = a new miss landed after that structural fix (a recurrence; the fix did not hold). Zero-count categories carry no bracket.
@@ -49,10 +50,10 @@ Each non-zero category carries a fix-status bracket: [OPEN] = misses logged, bel
 - INTENT: 0
 - FORK: 0
 - SCOPE: 1 [OPEN]
-- ASSUMPTION: 2 [OPEN]
+- ASSUMPTION: 3 [REGRESSED]
 - BUILD: 4 [REGRESSED]
 - STALE: 0
 
-Recurrence rate: 1 recurrence / 1 structural fix = 100%. (Post-fix misses divided by structural fixes applied. Tracks whether fixes hold; a rising rate means structural fixes are not sticking and the responsible rule or spec needs rework, not another point fix.)
+Recurrence rate: 2 recurrences / 2 structural fixes = 100%. (Post-fix misses divided by structural fixes applied. Tracks whether fixes hold; a rising rate means structural fixes are not sticking and the responsible rule or spec needs rework, not another point fix.)
 
-Last updated: 2026-07-07
+Last updated: 2026-07-28
