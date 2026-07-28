@@ -28,7 +28,7 @@ One row per miss in the log table below:
 ## How the loop closes
 - Single miss: diagnose, log the row, apply the adjustment immediately.
 - Pattern (3 or more of the same category, per the Part 3B threshold): trigger a structural fix to the responsible rule or spec, not just a point fix.
-- Recurrence: a new miss in a category that already received a structural fix is a recurrence, not a fresh single miss. The prior fix did not hold. Re-trigger escalation on the first recurrence (do not wait for three more), reopen and replace the failed fix via Part 3 / Part 3D rather than point-patching it again, and mark the category [REGRESSED] in the dashboard until the replacement fix is verified. Every recurrence feeds the recurrence-rate metric below.
+- Recurrence: a new miss in a category that already received a structural fix is a recurrence, not a fresh single miss. The prior fix did not hold. Re-trigger escalation on the first recurrence (do not wait for three more), reopen and replace the failed fix via Part 3 / Part 3D rather than point-patching it again, and mark the category [REGRESSED] in the dashboard until the replacement fix is verified. Marking [REGRESSED] also opens an OWED-FIX entry in the dashboard (see below). Every recurrence feeds the recurrence-rate metric below.
 - Dashboard: the category tally below. Whichever category dominates is the stage to fix next. FORK-heavy means tighten the fork rule. INTENT-heavy means sharpen the architect phase.
 
 ## The log
@@ -47,6 +47,8 @@ One row per miss in the log table below:
 ## Category tally (the dashboard)
 Each non-zero category carries a fix-status bracket: [OPEN] = misses logged, below threshold, point-fixed only; [FIXED] = reached the three-strike threshold and received a structural fix; [REGRESSED] = a new miss landed after that structural fix (a recurrence; the fix did not hold). Zero-count categories carry no bracket.
 
+Every category marked [REGRESSED] carries an open OWED-FIX entry in the list below, naming the structural fix that failed and every date it was breached. The entry is a debt, not a note: it clears only when a replacement structural fix is recorded against it, never merely because a new row was appended to the log or a point fix was applied to the latest instance. Appending a row updates the breach dates on the existing entry; it does not close it. An [OWED-FIX] left open across multiple breach dates is itself the signal that the category needs rework at the rule or spec level rather than another point patch.
+
 - TRIAGE: 0
 - INTENT: 0
 - FORK: 0
@@ -55,6 +57,11 @@ Each non-zero category carries a fix-status bracket: [OPEN] = misses logged, bel
 - BUILD: 5 [REGRESSED]
 - STALE: 0
 
+### Owed fixes (open)
+- **BUILD [OWED-FIX] — open.** Failed fix: the 2026-06-14 structural fix (swept every em-dash out of `user-preferences.md` in one pass and verified with grep, so no reproduced template could emit one). Breached 2026-07-06 (handoff block opened with a slash-command prefix) and 2026-07-28 (handoff carried a logically impossible acceptance criterion). Both breaches received point fixes only; no replacement structural fix has been recorded, so this entry stays open. Note on scope: the failed fix addressed em-dash reproduction specifically, while both breaches are build-time verification failures on handoff artifacts. The replacement owed here is therefore a broader BUILD-stage fix (verify the emitted artifact against its target before shipping), not a re-run of the em-dash sweep.
+
 Recurrence rate: 3 recurrences / 2 structural fixes = 150%. (Post-fix misses divided by structural fixes applied. Tracks whether fixes hold; a rising rate means structural fixes are not sticking and the responsible rule or spec needs rework, not another point fix.)
+
+The denominator spans categories: it counts the 2026-06-14 BUILD fix and the 2026-07-07 ASSUMPTION fix, not two BUILD fixes. The numerator likewise pools categories (BUILD 2026-07-06, ASSUMPTION 2026-07-28, BUILD 2026-07-28). Read it as a system-wide "do fixes hold" rate, not a per-category one; per-category exposure differs, since the BUILD fix has been in force since 2026-06-14 while the ASSUMPTION fix has only been in force since 2026-07-07.
 
 Last updated: 2026-07-28
