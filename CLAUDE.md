@@ -4,6 +4,18 @@
 
 This folder holds the canonical version of my Claude.ai User Preferences (`user-preferences.md`). Edits happen here, not in the claude.ai Settings UI. Claude.ai Settings → Profile → User Preferences is the deployment target, updated by manual paste from this file when changes are ready to go live.
 
+Skills follow the same source-of-truth-plus-deploy pattern as
+user-preferences.md. Canonical copies live in skills/<name>/SKILL.md in
+this repo. The deploy target is C:\Users\suberu\.claude\skills\<name>\,
+which is where Claude Code reads them from. Edit the repo copy, then
+copy it out; never edit the deployed copy directly. The two can fork
+silently, since nothing enforces the match, so before trusting a skill's
+behavior, diff the deployed copy against the repo copy.
+
+Note that ~/.claude/skills/ is a Claude Code path only. A skill needed
+in claude.ai chats is a separate install on that surface, and this repo
+does not track it.
+
 ## Workflow
 
 1. I describe a change (add rule, sharpen, retire, restructure). Or I paste in a Claude Code handoff prompt produced by a claude.ai chat — per Part 4's in-chat editing flow, chats now format edits as handoff prompts rather than instructing me to find-and-replace manually.

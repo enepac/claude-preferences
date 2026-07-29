@@ -43,14 +43,20 @@ and derive from what is there rather than sending the user to fetch it.
 5. State the access line before the conclusion drawn from it, so a
    skipped check is visible in the response rather than discovered later.
 
-## Paths are access claims too
+## Surfaces are access claims too
 
 Naming a file path, directory, or install location asserts that it
-exists and is reachable from the surface being addressed. Verify it or
-label it unverified. Two surfaces are routinely confused: the claude.ai
-sandbox tree and the user's own machine. A path that resolves in one
-does not resolve in the other, and a handoff carrying the wrong one
-aborts at best and writes to a disposable filesystem at worst.
+exists and is reachable from the surface being addressed. The same
+applies to any command, syntax, or tool invocation: it carries an
+assumption about which surface will execute it. Verify the surface or
+label the assumption unverified.
+
+Surfaces routinely confused: the claude.ai sandbox tree versus the
+user's own machine; PowerShell versus Bash versus WSL; a Claude Code
+path versus a claude.ai install. An artifact authored for the wrong
+surface aborts at best and writes somewhere disposable at worst.
+
+Before emitting a path or command, name which surface executes it.
 
 ## Handoffs must be self-contained
 
